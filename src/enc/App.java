@@ -11,7 +11,15 @@ import javafx.stage.Stage;
 public class App extends Application {
   public static void main(String[] args) {
 
-    Application.launch(App.class, args);
+    // encrypt/ decrypt test
+    FileEncryptionSubSystem.encryption("src/test.txt", "password", "DES");
+    FileEncryptionSubSystem.decryption("encrypt.txt","password","DES");
+
+    // generate key test
+    //KeyManagementSystem kgs = new KeyManagementSystem();
+    //kgs.generateNewKeys();
+
+    //Application.launch(App.class, args);
   }
   @Override
   public void start(Stage primaryStage) throws Exception {

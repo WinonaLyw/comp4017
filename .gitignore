@@ -1,3 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 /out
 /.idea
+/src/test.txt
+/Decrypt.txt
+/Encrypt.txt
+/output.txt

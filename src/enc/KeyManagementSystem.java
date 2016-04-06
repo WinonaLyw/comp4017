@@ -1,56 +1,45 @@
 package enc;
 
 import java.io.File;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.util.Base64;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by winona on 2/4/2016.
  */
 public class KeyManagementSystem {
-  private Map<String, String> fileMap;
+  private Map<String, String> fileMap = new HashMap<>();
   private String curFile;
+  private String curPass;
+  private KeyStore curKeyStore;
 
   public void openKeyStore(String fileName, String passphrase){
     String encryptionMode= fileMap.get(fileName);
     curFile = fileName;
-    FileEncryptionSubSystem.decryption(fileName, passphrase, encryptionMode);
-    // TODO: file content to KeyStore instance
+    curPass = passphrase;
+    FileEncryptionSubSystem.decryption(fileName, curPass, encryptionMode);
+    curKeyStore = new KeyStore();
+    curKeyStore.loadFromFile(fileName);
   }
 
-  public void createKeyStore(String fileName, String pass, String encryptionMode){
+  public void createKeyStore(String fileName, String pass, String encryptionMode)
+    throws IOException {
+    this.curPass = pass;
     fileMap.put(fileName, encryptionMode);
-    File keyFile = new File(fileName);
+    curFile = fileName;
+    curKeyStore = new KeyStore();
+    File file = new File(curFile);
+    file.createNewFile();
   }
 
   public void closeKeyStore(){
-    FileEncryptionSubSystem.encryption(curFile,"", fileMap.get(curFile));
+    curKeyStore.writeIntoFile(curFile);
+    FileEncryptionSubSystem.encryption(curFile, curPass, fileMap.get(curFile));
   }
 
   public void generateNewKeys(){
-    try {
-      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
-      SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-      keyGen.initialize(1024, random);
-      KeyPair pair = keyGen.generateKeyPair();
-      PrivateKey priv = pair.getPrivate();
-      PublicKey pub = pair.getPublic();
-
-      System.out.println(Base64.getEncoder().encodeToString(priv.getEncoded()));
-      System.out.println(Base64.getEncoder().encodeToString(pub.getEncoded()));
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (NoSuchProviderException e) {
-      e.printStackTrace();
-    }
-
+    curKeyStore.generateKeyPairs();
   }
 
 }

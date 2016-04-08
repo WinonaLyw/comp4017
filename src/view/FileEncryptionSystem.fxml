@@ -3,15 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
    <children>
       <SplitPane dividerPositions="0.5" prefHeight="150.0" prefWidth="600.0">
          <items>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="CREATE NEW KEY STROE" />
-                  <Button layoutX="14.0" layoutY="53.0" mnemonicParsing="false" text="OPEN A KEY STORE" />
+                  <Button onAction="#onCreateNewFile" layoutX="14.0" layoutY="53.0" mnemonicParsing="false" text="OPEN A KEY STORE" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
@@ -22,6 +21,7 @@
             </Pane>
          </items>
       </SplitPane>
-      <TextArea layoutY="150.0" prefHeight="251.0" prefWidth="600.0" />
+      <Pane layoutY="150.0" prefHeight="160.0" prefWidth="600.0" />
+      <TextArea layoutY="310.0" prefHeight="240.0" prefWidth="600.0" />
    </children>
 </Pane>

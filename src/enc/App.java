@@ -13,27 +13,33 @@ public class App extends Application {
   public static void main(String[] args) {
 
     // encrypt/ decrypt test
-    String method = "DES";
-    FileEncryptionSubSystem.encryptFile("src/test.txt", "password", method);
-    FileEncryptionSubSystem.decryptFile("encrypt.txt","password", method);
+    //FileEncryptionSubSystem.encryption("src/test.txt", "password", "DES");
+    //FileEncryptionSubSystem.decryption("encrypt.txt","password","DES");
 
     // generate key test
-    KeyManagementSystem kgs = new KeyManagementSystem();
-    try {
-      kgs.createKeyStore("keyTest.txt","password","DES");
-    } catch (IOException e) {
-      System.out.println("File exists!");
-      e.printStackTrace();
-    }
-    kgs.generateNewKeys();
-    kgs.closeKeyStore();
+    //KeyManagementSystem kgs = new KeyManagementSystem();
+    //try {
+    //  kgs.createKeyStore("keyTest.txt","password","DES");
+    //} catch (IOException e) {
+    //  System.out.println("File exists!");
+    //  e.printStackTrace();
+    //}
+    //kgs.generateNewKeys();
+    //kgs.closeKeyStore();
 
     Application.launch(App.class, args);
   }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("../view/FileEncryptionSystem.fxml"));
-    primaryStage.setScene(new Scene(root, 600, 400));
+    final FXMLLoader loader =
+      new FXMLLoader(getClass().getResource("../view/FileEncryptionSystem.fxml"));
+
+    final Parent root = loader.load();
+    final FESController controller = loader.getController();
+    controller.initStage(primaryStage);
+
+    primaryStage.setScene(new Scene(root, 600, 550));
     primaryStage.show();
   }
 }

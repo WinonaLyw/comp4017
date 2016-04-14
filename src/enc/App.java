@@ -13,8 +13,9 @@ public class App extends Application {
   public static void main(String[] args) {
 
     // encrypt/ decrypt test
-    FileEncryptionSubSystem.encryption("src/test.txt", "password", "DES");
-    FileEncryptionSubSystem.decryption("encrypt.txt","password","DES");
+    String method = "DES";
+    FileEncryptionSubSystem.encryptFile("src/test.txt", "password", method);
+    FileEncryptionSubSystem.decryptFile("encrypt.txt","password", method);
 
     // generate key test
     KeyManagementSystem kgs = new KeyManagementSystem();
@@ -27,7 +28,7 @@ public class App extends Application {
     kgs.generateNewKeys();
     kgs.closeKeyStore();
 
-    //Application.launch(App.class, args);
+    Application.launch(App.class, args);
   }
   @Override
   public void start(Stage primaryStage) throws Exception {

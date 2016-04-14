@@ -18,7 +18,7 @@ public class KeyManagementSystem {
     String encryptionMode= fileMap.get(fileName);
     curFile = fileName;
     curPass = passphrase;
-    FileEncryptionSubSystem.decryption(fileName, curPass, encryptionMode);
+    FileEncryptionSubSystem.decryptFile(fileName, curPass, encryptionMode);
     curKeyStore = new KeyStore();
     curKeyStore.loadFromFile(fileName);
   }
@@ -35,7 +35,7 @@ public class KeyManagementSystem {
 
   public void closeKeyStore(){
     curKeyStore.writeIntoFile(curFile);
-    FileEncryptionSubSystem.encryption(curFile, curPass, fileMap.get(curFile));
+    FileEncryptionSubSystem.encryptFile(curFile, curPass, fileMap.get(curFile));
   }
 
   public void generateNewKeys(){

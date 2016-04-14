@@ -3,6 +3,8 @@
 package enc;
 
 import java.io.IOException;
+
+import enc.controller.FESController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +15,9 @@ public class App extends Application {
   public static void main(String[] args) {
 
     // encrypt/ decrypt test
-    //FileEncryptionSubSystem.encryption("src/test.txt", "password", "DES");
-    //FileEncryptionSubSystem.decryption("encrypt.txt","password","DES");
+    //String method = "DES";
+    //FileEncryptionSubSystem.encryption("src/test.txt", "password", method);
+    //FileEncryptionSubSystem.decryption("encrypt.txt","password", method);
 
     // generate key test
     //KeyManagementSystem kgs = new KeyManagementSystem();

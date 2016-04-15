@@ -14,6 +14,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class FESController{
+  Stage stage;
+
+  public void initStage(Stage stage){
+    this.stage = stage;
+  }
+
   @FXML
   private SplitPane splitPane;
 

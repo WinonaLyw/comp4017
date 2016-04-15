@@ -15,9 +15,9 @@ public class App extends Application {
   public static void main(String[] args) {
 
     // encrypt/ decrypt test
-    //String method = "DES";
-    //FileEncryptionSubSystem.encryption("src/test.txt", "password", method);
-    //FileEncryptionSubSystem.decryption("encrypt.txt","password", method);
+//    String method = "DES";
+//    FileEncryptionSubSystem.encryptFile("src/test.txt", "password", method);
+//    FileEncryptionSubSystem.decryptFile("test_Encrypted.txt","password", method);
 
     // generate key test
     //KeyManagementSystem kgs = new KeyManagementSystem();
@@ -30,7 +30,7 @@ public class App extends Application {
     //kgs.generateNewKeys();
     //kgs.closeKeyStore();
 
-    Application.launch(App.class, args);
+    //Application.launch(App.class, args);
   }
 
   @Override

@@ -2,8 +2,6 @@
 
 package enc;
 
-import java.io.IOException;
-
 import enc.controller.FESController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,25 +10,33 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  public static void main(String[] args) {
+  public static final FileEncryptionSubsystem fes = FileEncryptionSubsystem.getInstance();
+  public static final AsymmetricKeyManagementSubsystem akms = AsymmetricKeyManagementSubsystem.getInstance();
 
+  private static String keyStoreFilePath = "keyTest.txt";
+
+  public static void main(String[] args) {
+    // Test
     // encrypt/ decrypt test
-//    String method = "DES";
-//    FileEncryptionSubSystem.encryptFile("src/test.txt", "password", method);
-//    FileEncryptionSubSystem.decryptFile("test_Encrypted.txt","password", method);
+//    String method = "DESede";
+//    fess.encryptFile("src/test.txt", "password", method);
+//    fess.decryptFile("test_Encrypted.txt","password", method);
+
+    // signature test
+//    String algorithm = "MD5withRSA";
+//    FileEncryptionSubsystem.generateDigitalSignature("src/test.txt", algorithm);
 
     // generate key test
-    //KeyManagementSystem kgs = new KeyManagementSystem();
-    //try {
-    //  kgs.createKeyStore("keyTest.txt","password","DES");
-    //} catch (IOException e) {
-    //  System.out.println("File exists!");
-    //  e.printStackTrace();
-    //}
-    //kgs.generateNewKeys();
-    //kgs.closeKeyStore();
-
-    //Application.launch(App.class, args);
+//    try {
+//      kgs.createKeyStore(keyStoreFilePath,"password","DES");
+//    } catch (IOException e) {
+//      System.out.println("File exists!");
+//      e.printStackTrace();
+//    }
+//    kgs.generateNewAsymmetricKeyPair();
+////    kgs.closeKeyStore();
+//
+    Application.launch(App.class, args);
   }
 
   @Override

@@ -1,6 +1,7 @@
 package enc.controller;
 
-import enc.FileEncryptionSubSystem;
+import enc.App;
+import enc.AsymmetricKeyManagementSubsystem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,11 +26,34 @@ public class FESController{
 
   @FXML
   private void createStore(ActionEvent event) {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save New Key Store");
+    File file = fileChooser.showSaveDialog(stage);
+    if (file != null) {
+      try {
+        // TODO: prompt for passphrase
+        String passphrase = "password";
+        App.akms.createKeyStore(file, passphrase);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @FXML
   private void openStore(ActionEvent event) {
-
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open Key Store");
+    File file = fileChooser.showOpenDialog(stage);
+    if (file != null) {
+      try {
+        // TODO: prompt for passphrase
+        String passphrase = "password";
+//        akmss.openKeyStore(file, passphrase);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @FXML

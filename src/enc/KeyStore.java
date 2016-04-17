@@ -1,6 +1,7 @@
 package enc;
 
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import java.io.*;
@@ -79,9 +80,9 @@ public class KeyStore {
 //          byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(publicKey);
 //          System.out.println(publicKey);
 //          System.out.println(publicKeyBytes);
-          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
-          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
-          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+//          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
+//          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+//          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
 //
           if (isPair) {
 //            currentLine = br.readLine();
@@ -94,16 +95,16 @@ public class KeyStore {
 //            enc.KeyPair keyPair = new enc.KeyPair(pair, name, description);
           }
         } else {
-          baos.write(currentLine.getBytes());
+//          baos.write(currentLine.getBytes());
         }
 
       }
-      byte[] bytes = baos.toByteArray();
+//      byte[] bytes = baos.toByteArray();
 
       //byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(baos.toByteArray());
-      X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(bytes);
-      KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
-      java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+//      X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(bytes);
+//      KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+//      java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
 
       br.close();
     } catch (Exception e) {

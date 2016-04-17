@@ -30,13 +30,13 @@ public class AsymmetricKeyManagementSubsystem {
 
     //if (content != null) {
       if (this.openedKeyStore != null) {
+        System.out.println("has opened");
         this.openedKeyStore.close();
         this.openedKeyStore = null;
       }
-    KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
-    System.out.println(newKeyStoreFile.getAbsolutePath());
+    //KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
 //    byte[] content = newKeyStore.open(passphrase, false);
-    this.openedKeyStore = newKeyStore;
+    this.openedKeyStore = new KeyStore(newKeyStoreFile);
     this.openedKeyStore.open(passphrase, false);
     //}
 //    return content;

@@ -1,8 +1,15 @@
 package enc;
 
+import sun.misc.BASE64Decoder;
+
+import javax.annotation.processing.SupportedSourceVersion;
 import java.io.*;
 import java.security.*;
 import java.security.KeyPair;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 public class KeyStore {
   private File file;
@@ -15,11 +22,11 @@ public class KeyStore {
 
   public KeyStore(File file) {
     this.file = file;
+    this.keyRing = new KeyRing();
   }
 
   public void create(String passphrase) {
     this.passphrase = passphrase;
-    this.keyRing = new KeyRing();
     try {
       this.file.createNewFile();
       this.writeLine(passphrase, true);
@@ -56,10 +63,39 @@ public class KeyStore {
       br.readLine(); // skip passphrase
       String currentLine = null;
       while ((currentLine = br.readLine()) != null) {
-        System.out.println();
+        if (currentLine.substring(0, 4).equals("Pair")) {
+          boolean isPair = currentLine.substring(6, currentLine.length()).equals("true");
+
+          currentLine = br.readLine();
+          String name = currentLine.substring(6, currentLine.length());
+          currentLine = br.readLine();
+          String description = currentLine.substring(6, currentLine.length());
+          System.out.println(name);
+          System.out.println(description);
+
+          currentLine = br.readLine();
+          String publicKey = currentLine.substring(0, currentLine.length());
+//          byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(publicKey);
+//          System.out.println(publicKey);
+//          System.out.println(publicKeyBytes);
+          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
+          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+//
+          if (isPair) {
+//            currentLine = br.readLine();
+//            String privateKey = currentLine.substring(6, currentLine.length());
+//            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey.getBytes());
+//            KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
+//            java.security.PrivateKey privKey = privKeyFactory.generatePrivate(privKeySpec);
+
+//            KeyPair pair = new KeyPair(pubKey, privKey);
+//            enc.KeyPair keyPair = new enc.KeyPair(pair, name, description);
+          }
+        }
       }
       br.close();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -85,7 +121,9 @@ public class KeyStore {
         filePath = this.tempDecryptedPath;
       }
       BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
-      bw.write(line);
+      if (line != null) {
+        bw.write(line);
+      }
       bw.newLine();
       bw.flush();
       bw.close();
@@ -115,15 +153,34 @@ public class KeyStore {
 
       this.keyRing.addKeyPair(pair,name,desc);
 
-      byte[] privateKey = pair.getPrivate().getEncoded();
-      byte[] publicKey = pair.getPublic().getEncoded();
+      PrivateKey privateKey = pair.getPrivate();
+      PublicKey publicKey = pair.getPublic();
+
+      X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+              publicKey.getEncoded());
+      byte[] pubKeyBytes = x509EncodedKeySpec.getEncoded();
+
+      PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+              privateKey.getEncoded());
+      byte[] privKeyBytes = pkcs8EncodedKeySpec.getEncoded();
 
       this.writeLine("Pair: " + true, false);
       this.writeLine("Name: " + name, false);
       this.writeLine("Desc: " + desc, false);
-      this.writeLine("Publ: " + privateKey.toString(), false);
-      this.writeLine("Priv: " + publicKey.toString(), false);
+      this.writeLine(pubKeyBytes.toString(), false);
+//      this.writeLine(privKeyBytes.toString(), false);
+
+//      this.writeLine("Publ: " + privateKey.toString(), false);
+//      this.writeLine("Priv: " + publicKey.toString(), false);
+
+      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+              pubKeyBytes);
+      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
+      System.out.println(pubKey.getEncoded());
     } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (InvalidKeySpecException e) {
       e.printStackTrace();
     }
   }

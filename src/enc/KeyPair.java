@@ -13,4 +13,8 @@ public class KeyPair {
     this.name = name;
     this.description = description;
   }
+
+  public String getName(){
+    return this.name;
+  }
 }

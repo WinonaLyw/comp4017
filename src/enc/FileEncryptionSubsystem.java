@@ -137,10 +137,10 @@ public class FileEncryptionSubsystem {
     }
   }
 
-  public void generateDigitalSignature(String filePath, String algorithm) {
+  public void generateDigitalSignature(Key priv,String filePath, String algorithm) {
     try {
       Signature signature = Signature.getInstance(algorithm);
-//      signature.initSign();
+//      signature.initSign(priv);
     } catch (Exception e) {
       e.printStackTrace();
     }

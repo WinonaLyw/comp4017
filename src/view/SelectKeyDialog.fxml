@@ -4,12 +4,10 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.SelectKeyDialogController">
    <children>
-      <Label fx:id="nameListLabel" layoutX="48.0" layoutY="42.0" text="Label" />
-      <Label layoutX="48.0" layoutY="161.0" text="Choose a name from the key pair list to export public key:" />
-      <TextField fx:id="keyNameField" layoutX="48.0" layoutY="193.0" />
-      <Button onAction="#keyChoosed" layoutX="388.0" layoutY="238.0" mnemonicParsing="false" text="OK" />
+      <Label layoutX="48.0" layoutY="76.0" text="Choose a key name to export the public key:" />
+      <Button layoutX="388.0" layoutY="238.0" mnemonicParsing="false" onAction="#keyChoosed" text="OK" />
+      <ComboBox fx:id="nameListBox" layoutX="80.0" layoutY="117.0" prefWidth="150.0" promptText="Key Name" />
    </children>
 </Pane>

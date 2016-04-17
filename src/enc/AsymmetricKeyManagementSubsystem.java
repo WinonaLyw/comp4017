@@ -52,4 +52,9 @@ public class AsymmetricKeyManagementSubsystem {
     openedKeyStore.importPublicKey(new KeyRing());
   }
 
+  public void exportPublicKey(String keyName, File file){
+    //TODO: get public key and export
+
+  }
+
 }

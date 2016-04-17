@@ -29,6 +29,7 @@ public class FESController{
 
   @FXML private SplitPane splitPane;
   @FXML private TextArea console;
+  @FXML private TextField keyNameField;
 
 
   @FXML
@@ -36,7 +37,7 @@ public class FESController{
     console.appendText("Action: Create a new key store\n");
     function = "createStore";
     FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save New Key Store");
+    fileChooser.setTitle("Create New Key Store");
     File file = fileChooser.showSaveDialog(stage);
     if (file != null) {
       try {
@@ -85,8 +86,33 @@ public class FESController{
 
 
   @FXML
-  private void exportKey(){
+  private void exportKey() throws IOException {
     console.appendText("Action: export public key\n");
+    // check if a key store opened
+    if (App.akms.openedKeyStore()){
+      Stage dialog = new Stage();
+      dialog.setTitle("Set Key Pair Information");
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setScene(scene);
+      dialog.show();
+    }else {
+      console.appendText("ERROR: Please open a key store first\n");
+    }
+
+  }
+
+  @FXML // select key dialog
+  private void keyChoosed(){
+    String keyName = keyNameField.getText();
+    // TODO: keyName compare
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Create New Key Store");
+    File file = fileChooser.showSaveDialog(stage);
+    if(file != null){
+      App.akms.exportPublicKey(keyName,file);
+    }
+
 
   }
 
@@ -94,6 +120,7 @@ public class FESController{
   private void importKey(){
     console.appendText("Action: export public key\n");
     function = "import";
+    // check if a key store opened
     if (App.akms.openedKeyStore()){
       FileChooser fileChooser = new FileChooser();
       fileChooser.setTitle("Open Public Key File");
@@ -143,7 +170,7 @@ public class FESController{
     }
   }
 
-  @FXML
+
   public void promptEncryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
@@ -152,6 +179,7 @@ public class FESController{
     dialog.show();
   }
 
+  // decryption will not prompt to set method
   private void promptDecryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
@@ -162,6 +190,7 @@ public class FESController{
     dialog.show();
   }
 
+  // different action after get passphrase
   public void confirm(String passphrase,String methodEn){
     switch (function){
       case "createStore":

@@ -3,13 +3,11 @@ package enc;
 import java.io.*;
 import java.security.*;
 import java.security.KeyPair;
-import java.util.Random;
 
 public class KeyStore {
   private File file;
 
   private String passphrase;
-  private byte[] decryptedContent;
   private KeyRing keyRing;
 
   private static final String KEYSTORE_ENCRYPTION_METHOD = "DES";
@@ -18,66 +16,77 @@ public class KeyStore {
     this.file = file;
   }
 
- public void create(String passphrase, String length) {
-  //  this.passphrase = passphrase;
-  //  this.keyRing = new KeyRing();
-  //
-  //  try {
-  //    this.file.createNewFile();
-  //
-  //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-  //    baos.write(length.getBytes());
-  //    baos.write(passphrase.getBytes());
-  //    this.decryptedContent = baos.toByteArray();
-  //    baos.close();
-  //
-  //    // TODO
-  //    this.store();
-  //  } catch (IOException e) {
-  //    e.printStackTrace();
-  //  }
+//  public void create(String passphrase, String length) {
+  public void create(String passphrase) {
+    this.passphrase = passphrase;
+    this.keyRing = new KeyRing();
+
+    try {
+      this.file.createNewFile();
+      this.writeLine(passphrase);
+      this.save();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
-  //
-  // Store decryptedContent to keystore file
-  private void store() {
-    //// 1. Encrypt decryptedContent
-    //byte[] encryptedContent = App.fes.encryptBytes(this.decryptedContent, this.passphrase,
-    //        KEYSTORE_ENCRYPTION_METHOD);
-    //
-    //// 2. Write encrypted content
-    //try {
-    //  FileOutputStream fos = new FileOutputStream(this.file);
-    //  fos.write(encryptedContent);
-    //  fos.close();
-    //} catch (IOException e) {
-    //  e.printStackTrace();
-    //}
+  // Store encrypted Line to keystore file
+  private void writeLine(String line) {
+    // 1. Encrypt plain line
+//    String encryptedLine = App.fes.encryptString(line, this.passphrase, KEYSTORE_ENCRYPTION_METHOD);
+
+    // 2. Write encrypted line
+    try {
+      BufferedWriter bw = new BufferedWriter(new FileWriter(this.file));
+      bw.write(line);
+      bw.newLine();
+      bw.flush();
+      bw.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private String readLine() {
+    String line = null;
+    // 1. Read encrypted line
+    try {
+      BufferedReader br = new BufferedReader(new FileReader(this.file));
+      line = br.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    // 2. Decrypt cipher line
+
+
+    return line;
+  }
+
+  private void save() {
+    App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
   }
 
   public byte[] open(String passphrase) {
-  //  // 1. Read keystore file into byte[] buffer
-  //  try {
-  //    FileInputStream fis = new FileInputStream(this.file);
-  //  } catch (FileNotFoundException e) {
-  //    e.printStackTrace();
-  //  }
-  //
-  //  // 2. Decrypt buffer
-  //
-  //  // 3. Read passphrase and check
-  //
-  //  // 3. TODO: Return decrypted content without passphrase?
-  //  byte[] decryptedContent = App.fes.decryptBytes(null);
-  //  this.decryptedContent = decryptedContent;
-    return decryptedContent;
+    try {
+      // 1. Read keystore file into byte[] buffer
+      FileInputStream fis = new FileInputStream(this.file);
+
+
+      // 2. Decrypt buffer
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    // 3. Read passphrase and check
+
+    // 3. TODO: Return decrypted content without passphrase?
+//    byte[] decryptedContent = App.fes.decryptBytes(null);
+//    this.decryptedContent = decryptedContent;
+    return null;
   }
 
   public void close() {
-    this.store();
-  }
-
-  public byte[] getDecryptedContent() {
-    return this.decryptedContent;
   }
 
   public void generateKeyPairs(){

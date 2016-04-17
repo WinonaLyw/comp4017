@@ -20,13 +20,13 @@ public class App extends Application {
   public static void main(String[] args) {
     // Test
     // encrypt/ decrypt test
-//    String method = "DESede";
-//    fes.decryptFile("src/test.txt","password", method, true);
+    //String method = "DESede";
+    //fes.decryptFile("src/a","password", method, false);
 //    fes.encryptFile("src/test.txt.tmp", "password", method, true);
 
     // akms test
     //akms.createNewKeyStore(new File("a.txt"), "password");
-    akms.openExistingKeyStore(new File("a.txt"), "passworr");
+//    akms.openExistingKeyStore(new File("a.txt"), "password");
 
 
     // signature test
@@ -43,6 +43,7 @@ public class App extends Application {
 //    kgs.generateNewAsymmetricKeyPair();
 ////    kgs.closeKeyStore();
 //
+
     Application.launch(App.class, args);
   }
 

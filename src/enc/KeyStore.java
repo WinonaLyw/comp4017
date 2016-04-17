@@ -23,7 +23,7 @@ public class KeyStore {
 
     try {
       this.file.createNewFile();
-      this.writeLine(passphrase, this.file.getAbsolutePath());
+      this.writeLine(passphrase, true);
       this.save(true);
       this.open(passphrase);
     } catch (IOException e) {
@@ -58,8 +58,14 @@ public class KeyStore {
     this.save(false);
   }
 
-  private void writeLine(String line, String filePath) {
+  private void writeLine(String line, boolean isKeyStoreFile) {
     try {
+      String filePath = null;
+      if (isKeyStoreFile) {
+        filePath = this.file.getAbsolutePath();
+      } else {
+        filePath = this.tempDecryptedPath;
+      }
       BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
       bw.write(line);
       bw.newLine();
@@ -87,6 +93,11 @@ public class KeyStore {
       keyGen.initialize(1024);
       KeyPair pair = keyGen.generateKeyPair();
       this.keyRing.addKeyPair(pair,name,desc);
+
+      byte[] privateKey = pair.getPrivate().getEncoded();
+      byte[] publicKey = pair.getPublic().getEncoded();
+      this.writeLine(privateKey.toString(), false);
+      this.writeLine(publicKey.toString(), false);
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }

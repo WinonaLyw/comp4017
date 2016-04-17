@@ -25,12 +25,12 @@ public class AsymmetricKeyManagementSubsystem {
   public byte[] openExistingKeyStore(File newKeyStoreFile, String passphrase) {
     KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
     byte[] content = newKeyStore.open(passphrase);
-    if (content != null) {
+//    if (content != null) {
       if (this.openedKeyStore != null) {
         this.openedKeyStore.close();
       }
       this.openedKeyStore = newKeyStore;
-    }
+//    }
     return content;
   }
 
@@ -47,5 +47,4 @@ public class AsymmetricKeyManagementSubsystem {
     //curKeyStore.generateKeyPairs();
     openedKeyStore.generateKeyPairs(name,desc);
   }
-
 }

@@ -19,9 +19,6 @@ import javafx.stage.Stage;
  */
 public class PassphraseDialogController {
 
-  private String fileName;
-  private String function;
-
   // Passphrase
   @FXML private PasswordField passphraseField;
   @FXML private PasswordField confirmField;
@@ -29,7 +26,6 @@ public class PassphraseDialogController {
   private String methodEn = "DES";
   @FXML
   private void confirmInfo(ActionEvent event) {
-    System.out.println(this.fileName);
     if(passphraseField.getText().length() != 8 || !passphraseField.getText().equals(confirmField.getText())){
       passphraseField.clear();
       confirmField.clear();
@@ -43,13 +39,5 @@ public class PassphraseDialogController {
   private void onRadioClick(ActionEvent event){
     methodEn = ((RadioButton) event.getSource()).getText();
   }
-
-
-  public void setInfo(String fileName, String function){
-    this.fileName = fileName;
-    this.function = function;
-  }
-
-
 
 }

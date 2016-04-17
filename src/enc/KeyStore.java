@@ -1,6 +1,7 @@
 package enc;
 
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import java.io.*;
@@ -62,6 +63,7 @@ public class KeyStore {
       BufferedReader br = new BufferedReader(new FileReader(this.tempDecryptedPath));
       br.readLine(); // skip passphrase
       String currentLine = null;
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
       while ((currentLine = br.readLine()) != null) {
         if (currentLine.substring(0, 4).equals("Pair")) {
           boolean isPair = currentLine.substring(6, currentLine.length()).equals("true");
@@ -73,14 +75,13 @@ public class KeyStore {
           System.out.println(name);
           System.out.println(description);
 
-          currentLine = br.readLine();
-          String publicKey = currentLine.substring(0, currentLine.length());
+//          String publicKey = currentLine.substring(0, currentLine.length());
 //          byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(publicKey);
 //          System.out.println(publicKey);
 //          System.out.println(publicKeyBytes);
-          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
-          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
-          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+//          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
+//          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+//          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
 //
           if (isPair) {
 //            currentLine = br.readLine();
@@ -92,8 +93,18 @@ public class KeyStore {
 //            KeyPair pair = new KeyPair(pubKey, privKey);
 //            enc.KeyPair keyPair = new enc.KeyPair(pair, name, description);
           }
+        } else {
+          baos.write(currentLine.getBytes());
         }
+
       }
+      byte[] bytes = baos.toByteArray();
+
+      //byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(baos.toByteArray());
+      X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(bytes);
+      KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+      java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+
       br.close();
     } catch (Exception e) {
       e.printStackTrace();
@@ -167,20 +178,26 @@ public class KeyStore {
       this.writeLine("Pair: " + true, false);
       this.writeLine("Name: " + name, false);
       this.writeLine("Desc: " + desc, false);
-      this.writeLine(pubKeyBytes.toString(), false);
+
+      BufferedWriter bw = new BufferedWriter(new FileWriter(this.tempDecryptedPath, true));
+      BASE64Encoder b64 = new BASE64Encoder();
+      bw.write(b64.encode(publicKey.getEncoded()));
+      bw.close();
+
+//      this.writeLine(pubKeyBytes.toString(), false);
 //      this.writeLine(privKeyBytes.toString(), false);
 
 //      this.writeLine("Publ: " + privateKey.toString(), false);
 //      this.writeLine("Priv: " + publicKey.toString(), false);
 
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-              pubKeyBytes);
-      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
-      System.out.println(pubKey.getEncoded());
+//      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+//              pubKeyBytes);
+//      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
+//      System.out.println(pubKey.getEncoded());
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

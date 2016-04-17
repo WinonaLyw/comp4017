@@ -155,15 +155,10 @@ public class FESController{
         break;
       case "decrypt":
         // TODO: method
-        App.fes.decryptFile(fileName,passphrase,methodEn);
+        App.fes.decryptFile(fileName,passphrase,methodEn,false);
         break;
     }
 
   }
 
-  @FXML
-  private void onRadioClick(ActionEvent event){
-    methodEn = ((RadioButton) event.getSource()).getText();
-    System.out.println(methodEn);
-  }
 }

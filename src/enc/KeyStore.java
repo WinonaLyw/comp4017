@@ -3,6 +3,7 @@ package enc;
 import java.io.*;
 import java.security.*;
 import java.security.KeyPair;
+import java.util.ArrayList;
 
 public class KeyStore {
   private File file;
@@ -163,5 +164,19 @@ public class KeyStore {
 
   public void importPublicKey(KeyRing piblicKeyRing){
 
+  }
+
+  public ArrayList<enc.KeyPair> getKeyPairs(){
+    if (keyRing != null){
+      return keyRing.getKeyPairs();
+    }
+    return null;
+  }
+
+  public Key getPrivateKey(String name){
+    if (keyRing != null){
+      return keyRing.getPrivateKey(name);
+    }
+    return null;
   }
 }

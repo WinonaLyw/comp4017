@@ -191,30 +191,18 @@ public class FESController{
   }
 
   @FXML
-  private void generateSignature() {
-    console.appendText("Action: generate signature\n");
-    function = "signature";
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Select a Key Store");
-    File file = fileChooser.showOpenDialog(stage);
-    if (file != null) {
-      try {
-        fileName = file.getAbsolutePath();
-        console.appendText("Key store file: " + fileName + "\n");
-        promptDecryptPassphrase();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+  private void generateSignature() throws IOException {
+    if(App.akms.openedKeyStore()){
+      console.appendText("Action: generate signature\n");
+      Stage dialog = new Stage();
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/GenerateSignatureDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setTitle("Generate Signature");
+      dialog.setScene(scene);
+      dialog.show();
+    } else {
+      console.appendText("ERROR: you should open a key store first\n");
     }
-  }
-
-  private void openSaveSignature() throws IOException {
-    Stage dialog = new Stage();
-    Parent root = FXMLLoader.load(getClass().getResource("../../view/GenerateSignatureDialog.fxml"));
-    Scene scene = new Scene(root);
-    dialog.setTitle("Generate Signature");
-    dialog.setScene(scene);
-    dialog.show();
   }
 
 
@@ -239,10 +227,6 @@ public class FESController{
         App.fes.decryptFile(fileName,passphrase,methodEn);
         console.appendText("Result: file decrypted\n");
         break;
-      case "signature":
-        //TODO: open key store get all pairs
-        openSaveSignature();
-        break;
     }
 
   }
@@ -260,8 +244,7 @@ public class FESController{
   }
 
   public void setSignatureInfo(String keyName, String algo){
-    //TODO: get private key
-    //App.fes.generateDigitalSignature(priv,fileName,algo);
+    App.fes.generateDigitalSignature(App.akms.getPrivateKey(keyName),fileName,algo);
   }
 
 }

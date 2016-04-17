@@ -1,5 +1,7 @@
 package enc;
 
+import java.security.Key;
+
 /**
  * Created by xiaoyufan on 16/4/2016.
  */
@@ -16,5 +18,13 @@ public class KeyPair {
 
   public String getName(){
     return this.name;
+  }
+
+  public Key getPrivateKey(){
+    return this.keyPair.getPrivate();
+  }
+
+  public Key getPublicKey(){
+    return this.keyPair.getPublic();
   }
 }

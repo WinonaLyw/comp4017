@@ -138,10 +138,18 @@ public class FileEncryptionSubsystem {
     }
   }
 
-  public void generateDigitalSignature(Key priv,String filePath, String algorithm) {
+  public void generateDigitalSignature(Key priv, String filePath, String algorithm) {
+    if (algorithm.equals("SHA1")) {
+      algorithm = "SHA1withDSA";
+    }
     try {
-      Signature signature = Signature.getInstance(algorithm);
-//      signature.initSign(priv);
+      Signature signature = Signature.getInstance(algorithm, "SUN");
+      signature.initSign((PrivateKey) priv);
+      byte[] realSig = signature.sign();
+      FileOutputStream sigfos = new FileOutputStream(filePath);
+      sigfos.write(realSig);
+      sigfos.close();
+
     } catch (Exception e) {
       e.printStackTrace();
     }

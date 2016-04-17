@@ -159,7 +159,7 @@ public class KeyStore {
 
   public void generateKeyPairs(String name, String desc){
     try {
-      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA");
       keyGen.initialize(1024);
       KeyPair pair = keyGen.generateKeyPair();
 
@@ -191,11 +191,19 @@ public class KeyStore {
 //      this.writeLine("Publ: " + privateKey.toString(), false);
 //      this.writeLine("Priv: " + publicKey.toString(), false);
 
+<<<<<<< Updated upstream
 //      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 //      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
 //              pubKeyBytes);
 //      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
 //      System.out.println(pubKey.getEncoded());
+=======
+      KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+              pubKeyBytes);
+      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
+      System.out.println(pubKey.getEncoded());
+>>>>>>> Stashed changes
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     } catch (IOException e) {

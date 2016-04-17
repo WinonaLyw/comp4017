@@ -14,7 +14,7 @@
          <ToggleGroup fx:id="algoGroup"/>
       </fx:define>
       <RadioButton onAction="#setAlgorithm" layoutX="60.0" selected="true" layoutY="174.0" mnemonicParsing="false" text="MD5" toggleGroup="$algoGroup"/>
-      <RadioButton layoutX="220.0" layoutY="174.0" mnemonicParsing="false" text="SHA1" toggleGroup="$algoGroup"/>
+      <RadioButton onAction="#setAlgorithm" layoutX="220.0" layoutY="174.0" mnemonicParsing="false" text="SHA1" toggleGroup="$algoGroup"/>
       <Button onAction="#generateSignature" layoutX="429.0" layoutY="227.0" mnemonicParsing="false" text="OK" />
    </children>
 </Pane>

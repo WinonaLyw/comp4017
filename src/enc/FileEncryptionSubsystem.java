@@ -156,6 +156,7 @@ public class FileEncryptionSubsystem {
       Signature signature = Signature.getInstance(algorithm, "SUN");
       signature.initSign((PrivateKey) priv);
       byte[] realSig = signature.sign();
+      System.out.println("signature: " + realSig + "file: " + filePath);
       FileOutputStream sigfos = new FileOutputStream(filePath);
       sigfos.write(realSig);
       sigfos.close();

@@ -243,8 +243,4 @@ public class FESController{
     }
   }
 
-  public void setSignatureInfo(String keyName, String algo){
-    App.fes.generateDigitalSignature(App.akms.getPrivateKey(keyName),fileName,algo);
-  }
-
 }

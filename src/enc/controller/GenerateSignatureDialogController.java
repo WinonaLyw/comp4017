@@ -32,7 +32,7 @@ public class GenerateSignatureDialogController {
     fileChooser.setTitle("Save Signature");
     File file = fileChooser.showSaveDialog(App.controller.stage);
     if(file != null){
-      App.controller.setSignatureInfo(keyName,algorithm);
+      App.fes.generateDigitalSignature(App.akms.getPrivateKey(keyName),file.getAbsolutePath(),algorithm);
       ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
     }
   }

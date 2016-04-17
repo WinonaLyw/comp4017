@@ -1,17 +1,19 @@
 package enc;
 
 import java.security.Key;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class KeyRing{
-  private ArrayList<KeyPair> keyPairs;
+  private ArrayList<enc.KeyPair> keyPairs;
+  private ArrayList<enc.PublicKey> publicKeys;
 
   public KeyRing() {
     keyPairs = new ArrayList<>();
   }
 
   public void addKeyPair(java.security.KeyPair keyPair, String name, String description) {
-    KeyPair kp = new KeyPair(keyPair, name, description);
+    enc.KeyPair kp = new enc.KeyPair(keyPair, name, description);
     this.keyPairs.add(kp);
   }
 
@@ -26,6 +28,11 @@ public class KeyRing{
       }
     }
     return null;
+  }
+
+  public void addPublicKey(PublicKey publicKey, String name, String description) {
+    enc.PublicKey pk = new enc.PublicKey(publicKey, name, description);
+    this.publicKeys.add(pk);
   }
 
 

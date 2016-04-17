@@ -26,11 +26,11 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by winona on 2/4/2016.
  */
-public class FileEncryptionSubsystem {
+public class FileEncryptionSubSystem {
   // This class should be used as single instance
-  private static FileEncryptionSubsystem instance = new FileEncryptionSubsystem();
-  private FileEncryptionSubsystem() {}
-  public static FileEncryptionSubsystem getInstance() {
+  private static FileEncryptionSubSystem instance = new FileEncryptionSubSystem();
+  private FileEncryptionSubSystem() {}
+  public static FileEncryptionSubSystem getInstance() {
     return instance;
   }
 

@@ -6,7 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -25,8 +27,9 @@ public class FileEncryptionController {
   }
 
   @FXML
-  private void openFileChooser() {
+  private void openFileChooser() throws IOException {
     File file = this.fileChooser.showOpenDialog(new Stage());
+    promptPassphrase();
     if (file != null) {
       lblFileName.setText("File name: " + file.getAbsolutePath());
     }
@@ -36,6 +39,14 @@ public class FileEncryptionController {
   private void backToMainMenu() throws IOException {
     Stage stage = (Stage) gridPane.getScene().getWindow();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/FileEncryptionSystem.fxml"));
+    Scene scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  private void promptPassphrase() throws IOException {
+    Stage stage = (Stage) gridPane.getScene().getWindow();
+    Parent root = FXMLLoader.load(getClass().getResource("../../view/passphrase.fxml"));
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();

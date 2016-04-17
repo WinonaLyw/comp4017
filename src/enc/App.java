@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  public static final FileEncryptionSubsystem fes = FileEncryptionSubsystem.getInstance();
+  public static final FileEncryptionSubSystem fes = FileEncryptionSubSystem.getInstance();
   public static final AsymmetricKeyManagementSubsystem akms = AsymmetricKeyManagementSubsystem.getInstance();
 
   private static String keyStoreFilePath = "keyTest.txt";

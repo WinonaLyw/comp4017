@@ -82,11 +82,12 @@ public class FileEncryptionSubsystem {
     String decryptedFilePath = null;
     try {
       // 1. Get output ciphertext file path
-      if (isKeyStoreFile) {
-        decryptedFilePath = getOutputFilePath(ciphertextPath, "tmp");
-      } else {
-        decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
-      }
+//      if (isKeyStoreFile) {
+//        decryptedFilePath = getOutputFilePath(ciphertextPath, "tmp");
+//      } else {
+//        decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
+//      }
+      decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
 
       // 2. Read salt
       FileInputStream fis = new FileInputStream(ciphertextPath);

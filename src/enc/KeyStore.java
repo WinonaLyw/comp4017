@@ -33,7 +33,7 @@ public class KeyStore {
 
   public byte[] open(String passphrase) {
     // 1. Decrypt keystore file
-    this.tempDecryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+    this.tempDecryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, false);
 
     // 2. Read passphrase (first line)
     String correctPassphrase = this.readLine(tempDecryptedPath);

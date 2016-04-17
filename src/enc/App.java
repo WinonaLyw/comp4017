@@ -55,7 +55,7 @@ public class App extends Application {
     controller = loader.getController();
     controller.initStage(primaryStage);
 
-    primaryStage.setScene(new Scene(root, 600, 550));
+    primaryStage.setScene(new Scene(root, 600, 400));
     primaryStage.show();
   }
 }

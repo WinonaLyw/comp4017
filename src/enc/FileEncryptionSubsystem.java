@@ -31,8 +31,14 @@ public class FileEncryptionSubsystem {
 
   public void encryptFile(String plaintextPath, String passphrase, String method, boolean isKeyStoreFile) {
     try {
+      String ciphertextPath = null;
       // 1. Get output encrypted file path
-      String ciphertextPath = getOutputFilePath(plaintextPath, "enc");
+//      if (isKeyStoreFile) {
+//        ciphertextPath = plaintextPath.substring(0, plaintextPath.lastIndexOf("."));
+//      } else {
+        ciphertextPath = getOutputFilePath(plaintextPath, "enc");
+//      }
+
       FileOutputStream fos = new FileOutputStream(ciphertextPath);
 
       // 2. Generate salt and write it to file
@@ -76,7 +82,11 @@ public class FileEncryptionSubsystem {
     String decryptedFilePath = null;
     try {
       // 1. Get output ciphertext file path
-      decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
+      if (isKeyStoreFile) {
+        decryptedFilePath = getOutputFilePath(ciphertextPath, "tmp");
+      } else {
+        decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
+      }
 
       // 2. Read salt
       FileInputStream fis = new FileInputStream(ciphertextPath);
@@ -137,14 +147,6 @@ public class FileEncryptionSubsystem {
 
   private String getOutputFilePath(String inputFilePath, String concatedStr) {
     return inputFilePath + "." + concatedStr;
-//    String fileDir = inputFilePath.substring(0, inputFilePath.lastIndexOf(File.separator));
-//
-//    String[] inputFileNameParts = Paths.get(inputFilePath).getFileName().toString().split("[.]");
-//    inputFileNameParts[0] = inputFileNameParts[0].concat(concatedStr);
-//    String outputFileName = String.join(".", inputFileNameParts);
-//
-//    String outputFilePath = fileDir + File.separator + outputFileName;
-//    return outputFilePath;
   }
 
   private String getCipherAlgorithm(String method) {

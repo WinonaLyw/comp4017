@@ -22,7 +22,7 @@ public class GenerateSignatureDialogController {
   private String algorithm = "MD5";
   @FXML
   public void initialize(){
-    //setNameList(App.akms);
+    setNameListBox(App.akms.getKeyPairList());
   }
 
   @FXML
@@ -41,6 +41,7 @@ public class GenerateSignatureDialogController {
   private void setAlgorithm(ActionEvent e){
     this.algorithm = ((RadioButton) e.getSource()).getText();
   }
+
   private void setNameListBox(ArrayList<KeyPair> keyList){
     ArrayList<String> name = new ArrayList<>();
     keyList.forEach(key -> name.add(key.getName()));

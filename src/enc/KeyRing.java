@@ -17,6 +17,19 @@ public class KeyRing{
     this.keyPairs.add(kp);
   }
 
+  public ArrayList<KeyPair> getKeyPairs(){
+    return this.keyPairs;
+  }
+
+  public Key getPrivateKey(String name){
+    for (KeyPair kp: this.keyPairs){
+      if (kp.getName().equals(name)){
+        return kp.getPrivateKey();
+      }
+    }
+    return null;
+  }
+
   public void addPublicKey(PublicKey publicKey, String name, String description) {
     enc.PublicKey pk = new enc.PublicKey(publicKey, name, description);
     this.publicKeys.add(pk);

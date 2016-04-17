@@ -1,7 +1,6 @@
 package enc;
 
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import java.io.*;
@@ -11,6 +10,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 
 public class KeyStore {
   private File file;
@@ -63,7 +63,6 @@ public class KeyStore {
       BufferedReader br = new BufferedReader(new FileReader(this.tempDecryptedPath));
       br.readLine(); // skip passphrase
       String currentLine = null;
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
       while ((currentLine = br.readLine()) != null) {
         if (currentLine.substring(0, 4).equals("Pair")) {
           boolean isPair = currentLine.substring(6, currentLine.length()).equals("true");
@@ -75,13 +74,14 @@ public class KeyStore {
           System.out.println(name);
           System.out.println(description);
 
-//          String publicKey = currentLine.substring(0, currentLine.length());
+          currentLine = br.readLine();
+          String publicKey = currentLine.substring(0, currentLine.length());
 //          byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(publicKey);
 //          System.out.println(publicKey);
 //          System.out.println(publicKeyBytes);
-//          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
-//          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
-//          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
+          X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey.getBytes());
+          KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
+          java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
 //
           if (isPair) {
 //            currentLine = br.readLine();
@@ -237,5 +237,19 @@ public class KeyStore {
 
   public void importPublicKey(KeyRing piblicKeyRing){
 
+  }
+
+  public ArrayList<enc.KeyPair> getKeyPairs(){
+    if (keyRing != null){
+      return keyRing.getKeyPairs();
+    }
+    return null;
+  }
+
+  public Key getPrivateKey(String name){
+    if (keyRing != null){
+      return keyRing.getPrivateKey(name);
+    }
+    return null;
   }
 }

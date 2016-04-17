@@ -1,7 +1,6 @@
 package enc.controller;
 
 import enc.App;
-import enc.AsymmetricKeyManagementSubsystem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,7 @@ public class FESController{
       try {
         // TODO: prompt for passphrase
         String passphrase = "password";
-        App.akms.createKeyStore(file, passphrase);
+        App.akms.createNewKeyStore(file, passphrase);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -49,7 +48,7 @@ public class FESController{
       try {
         // TODO: prompt for passphrase
         String passphrase = "password";
-//        akmss.openKeyStore(file, passphrase);
+        App.akms.openExistingKeyStore(file, passphrase);
       } catch (Exception e) {
         e.printStackTrace();
       }

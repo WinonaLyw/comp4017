@@ -1,38 +1,83 @@
 package enc;
 
 import java.io.*;
+import java.security.*;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.util.Random;
 
 public class KeyStore {
   private File file;
-  private FileInputStream fis;
-  private FileOutputStream fos;
+
+  private String passphrase;
+  private byte[] decryptedContent;
   private KeyRing keyRing;
 
-  public KeyStore(File file, String passphrase, String length) {
+  private static final String KEYSTORE_ENCRYPTION_METHOD = "DES";
+
+  public KeyStore(File file) {
+    this.file = file;
+  }
+
+  public void create(String passphrase, String length) {
+    this.passphrase = passphrase;
+    this.keyRing = new KeyRing();
+
     try {
-      this.file = file;
       this.file.createNewFile();
 
-      this.fis = new FileInputStream(this.file);
-      this.fos = new FileOutputStream(this.file);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      baos.write(length.getBytes());
+      baos.write(passphrase.getBytes());
+      this.decryptedContent = baos.toByteArray();
+      baos.close();
 
-      fos.write(length.getBytes());
-      fos.write(passphrase.getBytes());
+      // TODO
+      this.store();
     } catch (IOException e) {
       e.printStackTrace();
     }
-    keyRing = new KeyRing();
+  }
+
+  // Store decryptedContent to keystore file
+  private void store() {
+    // 1. Encrypt decryptedContent
+    byte[] encryptedContent = App.fes.encryptBytes(this.decryptedContent, this.passphrase,
+            KEYSTORE_ENCRYPTION_METHOD);
+
+    // 2. Write encrypted content
+    try {
+      FileOutputStream fos = new FileOutputStream(this.file);
+      fos.write(encryptedContent);
+      fos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public byte[] open(String passphrase) {
+    // 1. Read keystore file into byte[] buffer
+    try {
+      FileInputStream fis = new FileInputStream(this.file);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    // 2. Decrypt buffer
+
+    // 3. Read passphrase and check
+
+    // 3. TODO: Return decrypted content without passphrase?
+    byte[] decryptedContent = App.fes.decryptBytes(null);
+    this.decryptedContent = decryptedContent;
+    return decryptedContent;
   }
 
   public void close() {
+    this.store();
+  }
 
+  public byte[] getDecryptedContent() {
+    return this.decryptedContent;
   }
 
   public void generateKeyPairs(){

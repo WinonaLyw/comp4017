@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class App extends Application {
   public static final FileEncryptionSubsystem fes = FileEncryptionSubsystem.getInstance();
   public static final AsymmetricKeyManagementSubsystem akms = AsymmetricKeyManagementSubsystem.getInstance();
-
+  public static FESController controller;
   private static String keyStoreFilePath = "keyTest.txt";
 
   public static void main(String[] args) {
@@ -45,7 +45,7 @@ public class App extends Application {
       new FXMLLoader(getClass().getResource("../view/FileEncryptionSystem.fxml"));
 
     final Parent root = loader.load();
-    final FESController controller = loader.getController();
+    controller = loader.getController();
     controller.initStage(primaryStage);
 
     primaryStage.setScene(new Scene(root, 600, 550));

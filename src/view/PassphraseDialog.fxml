@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0" prefWidth="451.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0" prefWidth="451.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.PassphraseDialogController">
   <children>
     <PasswordField fx:id="passphraseField" layoutX="81.0" layoutY="43.0" prefHeight="27.0" prefWidth="181.0" promptText="Passphrase(8 characters)" />
     <Button layoutX="370.0" layoutY="210.0" mnemonicParsing="false" onAction="#confirmInfo" text="Confirm" />

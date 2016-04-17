@@ -32,7 +32,6 @@ public class FESController{
   }
 
   @FXML private SplitPane splitPane;
-  @FXML private Pane methodPane;  // MethodSelection view
   @FXML private TextField pairName;
   @FXML private TextArea pairDescription;
   @FXML private Label nameWarning;
@@ -104,6 +103,7 @@ public class FESController{
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
       fileName = file.getAbsolutePath();
+      System.out.print(fileName);
       promptEncryptPassphrase();
       // TODO: text area
       //lblFileName.setText("File name: " + file.getAbsolutePath());
@@ -126,12 +126,14 @@ public class FESController{
   public void promptEncryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
+    dialog.setTitle(function);
     Scene scene = new Scene(root);
     dialog.setScene(scene);
     dialog.show();
   }
 
   private void promptDecryptPassphrase() throws IOException {
+    //ppController.setInfo(fileName,function);
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
     Scene scene = new Scene(root);
@@ -141,42 +143,26 @@ public class FESController{
     dialog.show();
   }
 
-
-  // Passphrase
-  @FXML private PasswordField passphraseField;
-  @FXML private PasswordField confirmField;
-
-  private String methodEn = "DES";
-  @FXML
-  private void confirmInfo() {
-    if(passphraseField.getText().length() != 8 || !passphraseField.getText().equals(confirmField.getText())){
-      passphraseField.clear();
-      confirmField.clear();
-    }else {
-      switch (function){
-        case "createStore":
-          App.akms.createNewKeyStore(new File(fileName), passphraseField.getText());
-          break;
-        case "openStore":
-          App.akms.openExistingKeyStore(new File(fileName), passphraseField.getText());
-          break;
-        case "closeStore": break;
-        case "encrypt":
-          System.out.print(fileName);
-          App.fes.encryptFile(fileName,passphraseField.getText(),methodEn,false);
-          break;
-        case "decrypt":
-          // TODO: method
-          App.fes.decryptFile(fileName,passphraseField.getText(),methodEn);
-          break;
-      }
-
+  public void confirm(String passphrase,String methodEn){
+    switch (function){
+      case "createStore":
+        App.akms.createNewKeyStore(new File(fileName), passphrase);
+        break;
+      case "openStore":
+        App.akms.openExistingKeyStore(new File(fileName), passphrase);
+        break;
+      case "closeStore": break;
+      case "encrypt":
+        App.fes.encryptFile(fileName,passphrase,methodEn,false);
+        break;
+      case "decrypt":
+        // TODO: method
+        App.fes.decryptFile(fileName,passphrase,methodEn);
+        break;
     }
+
   }
 
-  @FXML
-  private void onRadioClick(ActionEvent event){
-    methodEn = ((RadioButton) event.getSource()).getText();
-    System.out.println(methodEn);
-  }
+
+
 }

@@ -49,6 +49,8 @@ public class KeyStore {
   private void save(boolean isKeyStoreFile) {
     if (isKeyStoreFile) {
       App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+    } else {
+      App.fes.encryptFile(this.tempDecryptedPath, this.passphrase, KEYSTORE_ENCRYPTION_METHOD, false);
     }
   }
 

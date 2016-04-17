@@ -41,14 +41,22 @@ public class FileEncryptionSubsystem {
 
       FileOutputStream fos = new FileOutputStream(ciphertextPath);
 
-      // 2. Generate salt and write it to file
+      // 2. Write method to file (6 bytes)
+      if (method.length() == 3) {
+        fos.write(method.getBytes());
+        fos.write(method.getBytes());
+      } else {
+        fos.write(method.getBytes());
+      }
+
+      // 3. Generate salt and write it to file
       byte[] salt = generateSalt();
       fos.write(salt);
 
-      // 3. Initialize cipher
+      // 4. Initialize cipher
       Cipher cipher = getCipherInstance(passphrase, method, salt, null);
 
-      // 4. Get IV and write it to file
+      // 5. Get IV and write it to file
       AlgorithmParameters params = cipher.getParameters();
       byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
       fos.write(iv);
@@ -79,19 +87,21 @@ public class FileEncryptionSubsystem {
   /*
     decrypt the encrypted file with password-base key and write into a "output.txt" file
    */
-  public String decryptFile(String ciphertextPath, String passphrase, String method) {
+  public String decryptFile(String ciphertextPath, String passphrase, String haha) {
     String decryptedFilePath = null;
     try {
-      // 1. Get output ciphertext file path
-//      if (isKeyStoreFile) {
-//        decryptedFilePath = getOutputFilePath(ciphertextPath, "tmp");
-//      } else {
-//        decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
-//      }
       decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");
+      FileInputStream fis = new FileInputStream(ciphertextPath);
+
+      // 1. Read method
+      byte[] methodBytes = new byte[6];
+      fis.read(methodBytes);
+      String method = new String(methodBytes);
+      if (method.charAt(3) != 'e') {
+        method = method.substring(0, 3);
+      }
 
       // 2. Read salt
-      FileInputStream fis = new FileInputStream(ciphertextPath);
       byte[] salt = new byte[SALT_LENGTH];
       fis.read(salt);
 

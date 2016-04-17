@@ -1,16 +1,15 @@
 package enc.controller;
 
 import enc.App;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -28,7 +27,7 @@ public class FESController{
 
   @FXML private SplitPane splitPane;
   @FXML private Pane methodPane;  // MethodSelection view
-  @FXML private BorderPane EncrptionMethodPane; // Passphrase view
+  @FXML private BorderPane encryptionMethodPane; // Passphrase view
 
   @FXML
   private void createStore(ActionEvent event) {
@@ -82,11 +81,11 @@ public class FESController{
     }
   }
 
-  private void promptEncryptPassphrase() throws IOException {
+  @FXML
+  public void promptEncryptPassphrase() throws IOException {
+    FXMLLoader.load(getClass().getResource("../view/MethodSelection.fxml"));
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/Passphrase.fxml"));
-
-    EncrptionMethodPane.setCenter(FXMLLoader.load(getClass().getResource("../../view/MethodSelection.fxml")));
     Scene scene = new Scene(root);
     dialog.setScene(scene);
     dialog.show();
@@ -96,6 +95,8 @@ public class FESController{
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/Passphrase.fxml"));
     Scene scene = new Scene(root);
+    BorderPane pane = (BorderPane) scene.lookup("#encryptionMethodPane");
+    pane.setCenter(null);
     dialog.setScene(scene);
     dialog.show();
   }

@@ -73,15 +73,12 @@ public class KeyStore {
     return line;
   }
 
-  public void generateKeyPairs(){
+  public void generateKeyPairs(String name, String desc){
     try {
       KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
       keyGen.initialize(1024);
       KeyPair pair = keyGen.generateKeyPair();
-      PrivateKey priv = pair.getPrivate();
-      PublicKey pub = pair.getPublic();
-//      this.addKeyRing(Base64.getEncoder().encodeToString(priv.getEncoded()));
-//      this.addKeyRing(Base64.getEncoder().encodeToString(pub.getEncoded()));
+      this.keyRing.addKeyPair(pair,name,desc);
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }

@@ -13,6 +13,7 @@ public class KeyRing{
   public void addKeyPair(java.security.KeyPair keyPair, String name, String description) {
     KeyPair kp = new KeyPair(keyPair, name, description);
     this.keyPairs.add(kp);
+    System.out.println(name);
   }
 
 

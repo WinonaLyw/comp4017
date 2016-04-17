@@ -13,7 +13,7 @@
                <children>
                   <Button fx:id="btn1" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#createStore" text="CREATE NEW KEY STORE" />
                   <Button layoutX="14.0" layoutY="53.0" mnemonicParsing="false" onAction="#openStore" text="OPEN A KEY STORE" />
-                  <Button layoutX="14.0" layoutY="93.0" mnemonicParsing="false" onAction="#openStore" text="GENERATE NEW ASYMMETRIC KEY PAIR" />
+                  <Button layoutX="14.0" layoutY="93.0" mnemonicParsing="false" onAction="#generateKeyPairs" text="GENERATE NEW ASYMMETRIC KEY PAIR" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">

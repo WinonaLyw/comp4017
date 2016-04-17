@@ -41,19 +41,13 @@ public class AsymmetricKeyManagementSubsystem {
 //    FileEncryptionSubsystem.encryptFile(curFile, curPass, fileMap.get(curFile));
   }
 
-//  public void generateNewAsymmetricKeyPair(){
-//    //curKeyStore.generateKeyPairs();
-//    try {
-//      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-//      keyGen.initialize(1024);
-//      KeyPair pair = keyGen.generateKeyPair();
-//      PrivateKey priv = pair.getPrivate();
-//      PublicKey pub = pair.getPublic();
-////      this.addKeyRing(Base64.getEncoder().encodeToString(priv.getEncoded()));
-////      this.addKeyRing(Base64.getEncoder().encodeToString(pub.getEncoded()));
-//    } catch (NoSuchAlgorithmException e) {
-//      e.printStackTrace();
-//    }
-//  }
+  public boolean openedKeyStore(){
+    return (openedKeyStore != null);
+  }
+
+  public void generateNewAsymmetricKeyPair(String name, String desc){
+    //curKeyStore.generateKeyPairs();
+    openedKeyStore.generateKeyPairs(name,desc);
+  }
 
 }

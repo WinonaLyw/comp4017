@@ -19,8 +19,8 @@ public class App extends Application {
     // Test
     // encrypt/ decrypt test
 //    String method = "DESede";
-//    fes.encryptFile("src/test.txt", "password", method);
-//    fes.decryptFile("test_Encrypted.txt","password", method);
+//    fes.encryptFile("src/test.txt", "password", method, false);
+//    fes.decryptFile("src/test.txt.enc","password", method, false);
 
     // signature test
 //    String algorithm = "MD5withRSA";

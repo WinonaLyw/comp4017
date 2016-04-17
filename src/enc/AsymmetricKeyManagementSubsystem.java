@@ -19,8 +19,6 @@ public class AsymmetricKeyManagementSubsystem {
 
   public void createNewKeyStore(File keyStoreFile, String passphrase) {
     this.openedKeyStore = new KeyStore(keyStoreFile);
-//    String length = String.format("%02d", passphrase.length());
-//    this.openedKeyStore.create(passphrase, length);
     this.openedKeyStore.create(passphrase);
   }
 

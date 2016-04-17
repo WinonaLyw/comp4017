@@ -103,7 +103,6 @@ public class FESController{
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
       fileName = file.getAbsolutePath();
-      System.out.print(fileName);
       promptEncryptPassphrase();
       // TODO: text area
       //lblFileName.setText("File name: " + file.getAbsolutePath());
@@ -126,7 +125,6 @@ public class FESController{
   public void promptEncryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
-    dialog.setTitle(function);
     Scene scene = new Scene(root);
     dialog.setScene(scene);
     dialog.show();
@@ -163,6 +161,9 @@ public class FESController{
 
   }
 
-
-
+  @FXML
+  private void onRadioClick(ActionEvent event){
+    methodEn = ((RadioButton) event.getSource()).getText();
+    System.out.println(methodEn);
+  }
 }

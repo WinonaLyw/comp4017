@@ -167,7 +167,7 @@ public class FESController{
           break;
         case "decrypt":
           // TODO: method
-          App.fes.decryptFile(fileName,passphraseField.getText(),methodEn);
+          App.fes.decryptFile(fileName,passphraseField.getText(),methodEn, false);
           break;
       }
 

@@ -6,6 +6,7 @@ import java.security.KeyPair;
 
 public class KeyStore {
   private File file;
+  private String decryptedPath;
 
   private String passphrase;
   private KeyRing keyRing;
@@ -24,6 +25,7 @@ public class KeyStore {
       this.file.createNewFile();
       this.writeLine(passphrase);
       this.save();
+      this.open(passphrase);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -31,15 +33,15 @@ public class KeyStore {
 
   public byte[] open(String passphrase) {
     // 1. Decrypt keystore file
-    App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD);
+    this.decryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
 
     // 2. Read passphrase (first line)
+    String correctPassphrase = this.readLine(decryptedPath);
+    if (!passphrase.equals(correctPassphrase)) {
+      return null;
+    }
 
-    // 3. Check passphrase
-
-    // 4. TODO: Return decrypted content without passphrase?
-//    byte[] decryptedContent = App.fes.decryptBytes(null);
-//    this.decryptedContent = decryptedContent;
+    this.writeLine("haha");
     return null;
   }
 
@@ -48,11 +50,12 @@ public class KeyStore {
   }
 
   public void close() {
+    this.save();
   }
 
   private void writeLine(String line) {
     try {
-      BufferedWriter bw = new BufferedWriter(new FileWriter(this.file));
+      BufferedWriter bw = new BufferedWriter(new FileWriter(this.decryptedPath, true));
       bw.write(line);
       bw.newLine();
       bw.flush();
@@ -62,10 +65,10 @@ public class KeyStore {
     }
   }
 
-  private String readLine() {
+  private String readLine(String filePath) {
     String line = null;
     try {
-      BufferedReader br = new BufferedReader(new FileReader(this.file));
+      BufferedReader br = new BufferedReader(new FileReader(filePath));
       line = br.readLine();
     } catch (IOException e) {
       e.printStackTrace();

@@ -16,7 +16,6 @@ public class KeyStore {
     this.file = file;
   }
 
-//  public void create(String passphrase, String length) {
   public void create(String passphrase) {
     this.passphrase = passphrase;
     this.keyRing = new KeyRing();
@@ -29,12 +28,29 @@ public class KeyStore {
       e.printStackTrace();
     }
   }
-  // Store encrypted Line to keystore file
-  private void writeLine(String line) {
-    // 1. Encrypt plain line
-//    String encryptedLine = App.fes.encryptString(line, this.passphrase, KEYSTORE_ENCRYPTION_METHOD);
 
-    // 2. Write encrypted line
+  public byte[] open(String passphrase) {
+    // 1. Decrypt keystore file
+    App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD);
+
+    // 2. Read passphrase (first line)
+
+    // 3. Check passphrase
+
+    // 4. TODO: Return decrypted content without passphrase?
+//    byte[] decryptedContent = App.fes.decryptBytes(null);
+//    this.decryptedContent = decryptedContent;
+    return null;
+  }
+
+  private void save() {
+    App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+  }
+
+  public void close() {
+  }
+
+  private void writeLine(String line) {
     try {
       BufferedWriter bw = new BufferedWriter(new FileWriter(this.file));
       bw.write(line);
@@ -48,45 +64,13 @@ public class KeyStore {
 
   private String readLine() {
     String line = null;
-    // 1. Read encrypted line
     try {
       BufferedReader br = new BufferedReader(new FileReader(this.file));
       line = br.readLine();
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    // 2. Decrypt cipher line
-
-
     return line;
-  }
-
-  private void save() {
-    App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
-  }
-
-  public byte[] open(String passphrase) {
-    try {
-      // 1. Read keystore file into byte[] buffer
-      FileInputStream fis = new FileInputStream(this.file);
-
-
-      // 2. Decrypt buffer
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    // 3. Read passphrase and check
-
-    // 3. TODO: Return decrypted content without passphrase?
-//    byte[] decryptedContent = App.fes.decryptBytes(null);
-//    this.decryptedContent = decryptedContent;
-    return null;
-  }
-
-  public void close() {
   }
 
   public void generateKeyPairs(){

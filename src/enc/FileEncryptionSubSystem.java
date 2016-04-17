@@ -1,34 +1,27 @@
 package enc;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Random;
-import java.util.StringJoiner;
-import java.util.concurrent.SynchronousQueue;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by winona on 2/4/2016.
  */
-public class FileEncryptionSubSystem {
+public class FileEncryptionSubsystem {
   // This class should be used as single instance
-  private static FileEncryptionSubSystem instance = new FileEncryptionSubSystem();
-  private FileEncryptionSubSystem() {}
-  public static FileEncryptionSubSystem getInstance() {
+  private static FileEncryptionSubsystem instance = new FileEncryptionSubsystem();
+  private FileEncryptionSubsystem() {}
+  public static FileEncryptionSubsystem getInstance() {
     return instance;
   }
 

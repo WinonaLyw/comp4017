@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
    <children>
-      <SplitPane fx:id="splitPane" dividerPositions="0.5418060200668896" prefHeight="150.0" prefWidth="600.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.5418060200668896" prefHeight="244.0" prefWidth="600.0">
          <items>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane prefHeight="212.0" prefWidth="320.0">
                <children>
                   <Button fx:id="btn1" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#createStore" text="CREATE NEW KEY STORE" />
-                  <Button layoutX="14.0" layoutY="53.0" mnemonicParsing="false" onAction="#openStore" text="OPEN A KEY STORE" />
-                  <Button layoutX="14.0" layoutY="93.0" mnemonicParsing="false" onAction="#generateKeyPairs" text="GENERATE NEW ASYMMETRIC KEY PAIR" />
+                  <Button layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#openStore" text="OPEN A KEY STORE" />
+                  <Button layoutX="14.0" layoutY="87.0" mnemonicParsing="false" onAction="#generateKeyPairs" text="GENERATE NEW ASYMMETRIC KEY PAIR" />
+                  <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#exportKey" text="EXPORT PUBLIC KEY" />
+                  <Button layoutX="14.0" layoutY="163.0" mnemonicParsing="false" onAction="#importKey" text="IMPORT PUBLIC KEY" />
+                  <Button layoutX="14.0" layoutY="200.0" mnemonicParsing="false" onAction="#closeStore" text="CLOSE CURRENT KEY STORE" textFill="#f80303" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Button layoutX="35.0" layoutY="14.0" mnemonicParsing="false" onAction="#encryptFile" text="FILE ENCRYPTION" />
                   <Button layoutX="35.0" layoutY="56.0" mnemonicParsing="false" onAction="#decryptFile" text="FILE DECRYPTION" />
+                  <Button layoutX="35.0" layoutY="94.0" mnemonicParsing="false" onAction="#decryptFile" text="GENERATE SIGNATURE" />
                </children>
             </Pane>
          </items>
       </SplitPane>
-      <TextArea fx:id="console" layoutY="150.0" prefHeight="251.0" prefWidth="600.0" />
+      <TextArea fx:id="console" layoutY="243.0" prefHeight="251.0" prefWidth="600.0" />
    </children>
 </Pane>

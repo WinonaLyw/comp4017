@@ -21,7 +21,7 @@ import java.io.IOException;
 public class FESController{
   Stage stage;
   String fileName;
-  String function = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore
+  String function = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore, import
 
   public void initStage(Stage stage){
     this.stage = stage;
@@ -29,17 +29,15 @@ public class FESController{
 
   @FXML private SplitPane splitPane;
   @FXML private TextArea console;
-  @FXML private TextField pairName;
-  @FXML private TextArea pairDescription;
-  @FXML private Label nameWarning;
-  @FXML private Label descWarning;
+  @FXML private TextField keyNameField;
+
 
   @FXML
   private void createStore() {
     console.appendText("Action: Create a new key store\n");
     function = "createStore";
     FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save New Key Store");
+    fileChooser.setTitle("Create New Key Store");
     File file = fileChooser.showSaveDialog(stage);
     if (file != null) {
       try {
@@ -72,6 +70,7 @@ public class FESController{
 
   @FXML
   private void generateKeyPairs() throws IOException {
+    function = "generate";
     if (App.akms.openedKeyStore()){
       console.appendText("Action: Generate a key pair\n");
       Stage dialog = new Stage();
@@ -85,19 +84,80 @@ public class FESController{
     }
   }
 
-  @FXML // generate key pair
-  private void onSubmit(ActionEvent event){
-    if(pairName.getText().isEmpty()){
-      nameWarning.setVisible(true);
+
+  @FXML
+  private void exportKey() throws IOException {
+    // check if a key store opened
+    if (App.akms.openedKeyStore()){
+      console.appendText("Action: export public key\n");
+      function ="export";
+      Stage dialog = new Stage();
+      dialog.setTitle("Set Key Pair Information");
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setScene(scene);
+      dialog.show();
+    }else {
+      console.appendText("ERROR: Please open a key store first\n");
     }
-    if (pairDescription.getText().isEmpty()){
-      descWarning.setVisible(true);
+
+  }
+
+  @FXML // select key dialog
+  private void keyChoosed(){
+    String keyName = keyNameField.getText();
+    // TODO: keyName compare
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Create New Key Store");
+    File file = fileChooser.showSaveDialog(stage);
+    if(file != null){
+      App.akms.exportPublicKey(keyName,file);
     }
-    if(!pairName.getText().isEmpty() && !pairDescription.getText().isEmpty()){
-      App.akms.generateNewAsymmetricKeyPair(pairName.getText(),pairDescription.getText());
-      ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
+
+
+  }
+
+  @FXML
+  private void importKey(){
+    // check if a key store opened
+    if (App.akms.openedKeyStore()){
+      console.appendText("Action: export public key\n");
+      function = "import";
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Open Public Key File");
+      File file = fileChooser.showOpenDialog(stage);
+      if (file != null) {
+        try {
+          fileName = file.getAbsolutePath();
+          console.appendText("Public key file: " + fileName + "\n");
+          Stage dialog = new Stage();
+          dialog.setTitle("Set Key Pair Information");
+          Parent root = FXMLLoader.load(getClass().getResource("../../view/KeyPairInfoDialog.fxml"));
+          Scene scene = new Scene(root);
+          dialog.setScene(scene);
+          dialog.show();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }else {
+      console.appendText("ERROR: Please open a key store first\n");
+    }
+
+  }
+
+  @FXML
+  private void closeStore(){
+    // check if a key store opened
+    if (App.akms.openedKeyStore()){
+      console.appendText("Action: close the key store\n");
+      function = "closeStore";
+      App.akms.closeKeyStore();
+    }else {
+      console.appendText("ERROR: Please open a key store first\n");
     }
   }
+
 
   @FXML
   private void encryptFile(ActionEvent event) throws IOException {
@@ -123,7 +183,7 @@ public class FESController{
     }
   }
 
-  @FXML
+
   public void promptEncryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
@@ -132,6 +192,7 @@ public class FESController{
     dialog.show();
   }
 
+  // decryption will not prompt to set method
   private void promptDecryptPassphrase() throws IOException {
     Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
@@ -142,6 +203,7 @@ public class FESController{
     dialog.show();
   }
 
+  // different action after get passphrase
   public void confirm(String passphrase,String methodEn){
     switch (function){
       case "createStore":
@@ -164,6 +226,18 @@ public class FESController{
         break;
     }
 
+  }
+  public void saveKey(String name, String desc){
+    switch(function){
+      case "generate":
+        App.akms.generateNewAsymmetricKeyPair(name,desc);
+        console.appendText("Result: key pair generated\n");
+        break;
+      case "import":
+        App.akms.importPublicKey(fileName,name,desc);
+        console.appendText("Result: key imported\n");
+        break;
+    }
   }
 
 }

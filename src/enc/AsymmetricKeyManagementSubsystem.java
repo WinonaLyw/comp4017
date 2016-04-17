@@ -56,4 +56,14 @@ public class AsymmetricKeyManagementSubsystem {
     openedKeyStore.generateKeyPairs(name,desc);
   }
 
+  public void importPublicKey(String filename, String name, String desc){
+    // TODO: read file get key ring
+    openedKeyStore.importPublicKey(new KeyRing());
+  }
+
+  public void exportPublicKey(String keyName, File file){
+    //TODO: get public key and export
+
+  }
+
 }

@@ -2,10 +2,8 @@ package enc;
 
 import enc.controller.FileEncryptionController;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
@@ -22,6 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -37,32 +36,27 @@ public class FileEncryptionSubsystem {
 
   private static final String PADDING_MODE = "CBC/PKCS5Padding";
   private static final int SALT_LENGTH = 20;
+  private static final int ITERATION_COUNT = 65536;
 
-  public void encryptFile(String plaintextPath, String passphrase, String method) {
-    System.out.println("Encryption");
+  public void encryptFile(String plaintextPath, String passphrase, String method, boolean isKeyStoreFile) {
     try {
       // 1. Get output encrypted file path
       String ciphertextPath = getOutputFilePath(plaintextPath, "_Encrypted");
       FileOutputStream fos = new FileOutputStream(ciphertextPath);
 
-      // 2. Generate salt and write it to output file
+      // 2. Generate salt and write it to file
       byte[] salt = generateSalt();
-      System.out.println("salt: " + salt);
       fos.write(salt);
 
       // 3. Initialize cipher
-      SecretKey key = generateKeyFromPassphrase(passphrase, method, salt);
-      String algorithm = getCipherAlgorithm(method);
-      Cipher cipher = Cipher.getInstance(algorithm);
-      cipher.init(Cipher.ENCRYPT_MODE, key);
+      Cipher cipher = getCipherInstance(passphrase, method, salt, null);
 
-      // 4. Generate IV and write it to output file
+      // 4. Get IV and write it to file
       AlgorithmParameters params = cipher.getParameters();
       byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-      System.out.println("iv: " + iv);
       fos.write(iv);
 
-      // 5. Write encrypted file
+      // 6. Write encrypted file
       CipherInputStream cis = new CipherInputStream(new FileInputStream(plaintextPath), cipher);
       byte[] bytes = new byte[256];
       int numBytes;
@@ -71,6 +65,14 @@ public class FileEncryptionSubsystem {
       }
       cis.close();
       fos.close();
+
+      // 7. Encrypted keystore file will replace the plaintext file
+      if (isKeyStoreFile) {
+        File plainKeyStoreFile = new File(plaintextPath);
+        plainKeyStoreFile.delete();
+        File cipherKeyStoreFile = new File(ciphertextPath);
+        cipherKeyStoreFile.renameTo(plainKeyStoreFile);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -95,10 +97,7 @@ public class FileEncryptionSubsystem {
       fis.read(iv);
 
       // 4. Initialize cipher
-      SecretKey key = generateKeyFromPassphrase(passphrase, method, salt);
-      String algorithm = getCipherAlgorithm(method);
-      Cipher cipher = Cipher.getInstance(algorithm);
-      cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+      Cipher cipher = getCipherInstance(passphrase, method, salt, iv);
 
       // 5. Write decrypted file
       CipherOutputStream cos = new CipherOutputStream(new FileOutputStream(decryptedFilePath), cipher);
@@ -108,9 +107,28 @@ public class FileEncryptionSubsystem {
         cos.write(bytes, 0, numBytes);
       }
       fis.close();
+      cos.flush();
       cos.close();
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  private Cipher getCipherInstance(String passphrase, String method, byte[] salt, byte[] iv) {
+    Cipher cipher = null;
+    try {
+      SecretKey key = generateKeyFromPassphrase(passphrase, method, salt);
+      String algorithm = getCipherAlgorithm(method);
+      cipher = Cipher.getInstance(algorithm);
+      if (iv == null) {
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+      } else {
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      return cipher;
     }
   }
 
@@ -124,11 +142,14 @@ public class FileEncryptionSubsystem {
   }
 
   private String getOutputFilePath(String inputFilePath, String concatedStr) {
+    String fileDir = inputFilePath.substring(0, inputFilePath.lastIndexOf(File.separator));
+
     String[] inputFileNameParts = Paths.get(inputFilePath).getFileName().toString().split("[.]");
     inputFileNameParts[0] = inputFileNameParts[0].concat(concatedStr);
     String outputFileName = String.join(".", inputFileNameParts);
-    // TODO: change output filename to path
-    return outputFileName;
+
+    String outputFilePath = fileDir + File.separator + outputFileName;
+    return outputFilePath;
   }
 
   private String getCipherAlgorithm(String method) {
@@ -156,27 +177,22 @@ public class FileEncryptionSubsystem {
   }
 
   /*
-    generate a symmetric key from passphrase with a random salt
+    Generate a symmetric key from passphrase with a random salt
    */
   private SecretKey generateKeyFromPassphrase(String passphrase, String method, byte[] salt) {
-    //r.nextBytes(iv);
-
     String algorithm = null;
     PBEKeySpec pbeKeySpec = null;
-    // AES: PBKDF2WithHmacSHA256 256
-    // DES: PBKDF2WithHmacSHA1 128
-    // DESede:PBEWithSHA1andDESede (no need to specify key length)
 
     if (method.equals("DES")) {
       algorithm = "PBEWithMD5andDES";
-      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, 65536);
+      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, ITERATION_COUNT);
       // 65536:key derivation iteration count, 256: the key size
     } else if (method.equals("AES")) {
       algorithm = "PBKDF2WithHmacSHA1";
-      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, 65536, 128);
+      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, ITERATION_COUNT, 128);
     } else if (method.equals("DESede")) {
       algorithm = "PBKDF2WithHmacSHA256";
-      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, 65536, 192);
+      pbeKeySpec = new PBEKeySpec(passphrase.toCharArray(), salt, ITERATION_COUNT, 192);
     }
 
     SecretKey key = null;

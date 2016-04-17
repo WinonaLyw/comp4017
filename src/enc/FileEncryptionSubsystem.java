@@ -70,7 +70,6 @@ public class FileEncryptionSubsystem {
         File cipherKeyStoreFile = new File(ciphertextPath);
         cipherKeyStoreFile.renameTo(plainKeyStoreFile);
       } else {
-        System.out.println("ohohoh");
       }
     } catch (Exception e) {
       e.printStackTrace();

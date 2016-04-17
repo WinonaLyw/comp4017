@@ -26,7 +26,7 @@ public class App extends Application {
 
     // akms test
     //akms.createNewKeyStore(new File("a.txt"), "password");
-    akms.openExistingKeyStore(new File("a.txt"), "passworr");
+    //akms.openExistingKeyStore(new File("a.txt"), "passworr");
 
 
     // signature test

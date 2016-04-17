@@ -96,8 +96,11 @@ public class KeyStore {
 
       byte[] privateKey = pair.getPrivate().getEncoded();
       byte[] publicKey = pair.getPublic().getEncoded();
-      this.writeLine(privateKey.toString(), false);
-      this.writeLine(publicKey.toString(), false);
+
+      this.writeLine("name: " + name, false);
+      this.writeLine("desc: " + desc, false);
+      this.writeLine("publ: " + privateKey.toString(), false);
+      this.writeLine("priv: " + publicKey.toString(), false);
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }

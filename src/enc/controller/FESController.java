@@ -1,8 +1,6 @@
 package enc.controller;
 
 import enc.App;
-import java.nio.file.OpenOption;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,13 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -101,7 +96,6 @@ public class FESController{
     if(!pairName.getText().isEmpty() && !pairDescription.getText().isEmpty()){
       App.akms.generateNewAsymmetricKeyPair(pairName.getText(),pairDescription.getText());
       ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
-      console.appendText("Result: key pair generated\n");
     }
   }
 

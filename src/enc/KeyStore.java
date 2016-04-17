@@ -20,7 +20,6 @@ public class KeyStore {
   public void create(String passphrase) {
     this.passphrase = passphrase;
     this.keyRing = new KeyRing();
-
     try {
       this.file.createNewFile();
       this.writeLine(passphrase, true);
@@ -92,6 +91,7 @@ public class KeyStore {
       KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
       keyGen.initialize(1024);
       KeyPair pair = keyGen.generateKeyPair();
+
       this.keyRing.addKeyPair(pair,name,desc);
 
       byte[] privateKey = pair.getPrivate().getEncoded();

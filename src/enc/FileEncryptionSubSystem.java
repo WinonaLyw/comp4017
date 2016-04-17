@@ -2,6 +2,7 @@ package enc;
 
 import enc.controller.FileEncryptionController;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -76,6 +77,33 @@ public class FileEncryptionSubSystem {
     }
   }
 
+  public byte[] encryptByte(byte[] ciphertext, String passphrase, String method){
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+    try {
+      // 1. Generate salt and write it to output file
+      byte[] salt = generateSalt();
+      System.out.println("salt: " + salt);
+      outputStream.write(salt);
+
+      // 2. Initialize cipher
+      SecretKey key = generateKeyFromPassphrase(passphrase, method, salt);
+      String algorithm = getCipherAlgorithm(method);
+      Cipher cipher = Cipher.getInstance(algorithm);
+      cipher.init(Cipher.ENCRYPT_MODE, key);
+
+      // 3. Generate IV and write it to output file
+      AlgorithmParameters params = cipher.getParameters();
+      byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+      outputStream.write(iv);
+      outputStream.write(cipher.doFinal(ciphertext));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    byte[] output = outputStream.toByteArray();
+    return output;
+  }
+
+
   /*
     decrypt the encrypted file with password-base key and write into a "output.txt" file
    */
@@ -113,6 +141,7 @@ public class FileEncryptionSubSystem {
       e.printStackTrace();
     }
   }
+
 
   public void generateDigitalSignature(String filePath, String algorithm) {
     try {

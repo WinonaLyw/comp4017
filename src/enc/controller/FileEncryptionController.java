@@ -45,10 +45,10 @@ public class FileEncryptionController {
   }
 
   private void promptPassphrase() throws IOException {
-    Stage stage = (Stage) gridPane.getScene().getWindow();
+    Stage dialog = new Stage();
     Parent root = FXMLLoader.load(getClass().getResource("../../view/passphrase.fxml"));
     Scene scene = new Scene(root);
-    stage.setScene(scene);
-    stage.show();
+    dialog.setScene(scene);
+    dialog.show();
   }
 }

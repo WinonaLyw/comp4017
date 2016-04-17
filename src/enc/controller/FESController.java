@@ -87,9 +87,10 @@ public class FESController{
 
   @FXML
   private void exportKey() throws IOException {
-    console.appendText("Action: export public key\n");
     // check if a key store opened
     if (App.akms.openedKeyStore()){
+      console.appendText("Action: export public key\n");
+      function ="export";
       Stage dialog = new Stage();
       dialog.setTitle("Set Key Pair Information");
       Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
@@ -118,10 +119,10 @@ public class FESController{
 
   @FXML
   private void importKey(){
-    console.appendText("Action: export public key\n");
-    function = "import";
     // check if a key store opened
     if (App.akms.openedKeyStore()){
+      console.appendText("Action: export public key\n");
+      function = "import";
       FileChooser fileChooser = new FileChooser();
       fileChooser.setTitle("Open Public Key File");
       File file = fileChooser.showOpenDialog(stage);
@@ -143,6 +144,18 @@ public class FESController{
       console.appendText("ERROR: Please open a key store first\n");
     }
 
+  }
+
+  @FXML
+  private void closeStore(){
+    // check if a key store opened
+    if (App.akms.openedKeyStore()){
+      console.appendText("Action: close the key store\n");
+      function = "closeStore";
+      App.akms.closeKeyStore();
+    }else {
+      console.appendText("ERROR: Please open a key store first\n");
+    }
   }
 
 

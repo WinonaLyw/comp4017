@@ -46,8 +46,8 @@ public class FESController{
     File file = fileChooser.showSaveDialog(stage);
     if (file != null) {
       try {
-        promptDecryptPassphrase();
         fileName = file.getAbsolutePath();
+        promptDecryptPassphrase();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -62,9 +62,8 @@ public class FESController{
     File file = fileChooser.showOpenDialog(stage);
     if (file != null) {
       try {
+        fileName = file.getAbsolutePath();
         promptDecryptPassphrase();
-        String passphrase = "password";
-        App.akms.openExistingKeyStore(file, passphrase);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -76,7 +75,7 @@ public class FESController{
     if (App.akms.openedKeyStore()){
       Stage dialog = new Stage();
       dialog.setTitle("Set Key Pair Information");
-      Parent root = FXMLLoader.load(getClass().getResource("../../view/KeyPairInfo.fxml"));
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/KeyPairInfoDialog.fxml"));
       Scene scene = new Scene(root);
       dialog.setScene(scene);
       dialog.show();
@@ -104,9 +103,9 @@ public class FESController{
     function = "encrypt";
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
+      fileName = file.getAbsolutePath();
       promptEncryptPassphrase();
       // TODO: text area
-      fileName = file.getAbsolutePath();
       //lblFileName.setText("File name: " + file.getAbsolutePath());
     }
   }
@@ -116,18 +115,17 @@ public class FESController{
     function = "decrypt";
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
+      fileName = file.getAbsolutePath();
       promptDecryptPassphrase();
       // TODO: text area
-      fileName = file.getAbsolutePath();
       //lblFileName.setText("File name: " + file.getAbsolutePath());
     }
   }
 
   @FXML
   public void promptEncryptPassphrase() throws IOException {
-    FXMLLoader.load(getClass().getResource("../../view/MethodSelection.fxml"));
     Stage dialog = new Stage();
-    Parent root = FXMLLoader.load(getClass().getResource("../../view/Passphrase.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
     Scene scene = new Scene(root);
     dialog.setScene(scene);
     dialog.show();
@@ -135,7 +133,7 @@ public class FESController{
 
   private void promptDecryptPassphrase() throws IOException {
     Stage dialog = new Stage();
-    Parent root = FXMLLoader.load(getClass().getResource("../../view/Passphrase.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("../../view/PassphraseDialog.fxml"));
     Scene scene = new Scene(root);
     BorderPane pane = (BorderPane) scene.lookup("#encryptionMethodPane");
     pane.setCenter(null);
@@ -160,9 +158,11 @@ public class FESController{
           App.akms.createNewKeyStore(new File(fileName), passphraseField.getText());
           break;
         case "openStore":
+          App.akms.openExistingKeyStore(new File(fileName), passphraseField.getText());
           break;
         case "closeStore": break;
         case "encrypt":
+          System.out.print(fileName);
           App.fes.encryptFile(fileName,passphraseField.getText(),methodEn,false);
           break;
         case "decrypt":

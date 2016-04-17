@@ -10,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.FESController">
    <children>
-      <SplitPane fx:id="splitPane" dividerPositions="0.5418060200668896" prefHeight="244.0" prefWidth="600.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="244.0" prefWidth="600.0">
          <items>
             <Pane prefHeight="212.0" prefWidth="320.0">
                <children>
@@ -22,11 +22,14 @@
                   <Button layoutX="14.0" layoutY="200.0" mnemonicParsing="false" onAction="#closeStore" text="CLOSE CURRENT KEY STORE" textFill="#f80303" />
                </children>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane prefHeight="242.0" prefWidth="300.0">
                <children>
-                  <Button layoutX="35.0" layoutY="14.0" mnemonicParsing="false" onAction="#encryptFile" text="FILE ENCRYPTION" />
-                  <Button layoutX="35.0" layoutY="56.0" mnemonicParsing="false" onAction="#decryptFile" text="FILE DECRYPTION" />
-                  <Button layoutX="35.0" layoutY="94.0" mnemonicParsing="false" onAction="#decryptFile" text="GENERATE SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#encryptFile" text="FILE ENCRYPTION" />
+                  <Button layoutX="14.0" layoutY="48.0" mnemonicParsing="false" onAction="#decryptFile" text="FILE DECRYPTION" />
+                  <Button layoutX="14.0" layoutY="85.0" mnemonicParsing="false" onAction="#generateSignature" text="GENERATE SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#decryptFile" text="ENCRYPTION + GENERATE SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="201.0" mnemonicParsing="false" onAction="#decryptFile" text="DECRYPTION + VERIFY SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="163.0" mnemonicParsing="false" onAction="#decryptFile" text="VERIFY SIGNATURE" />
                </children>
             </Pane>
          </items>

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -21,7 +22,7 @@ import java.io.IOException;
 public class FESController{
   Stage stage;
   String fileName;
-  String function = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore, import
+  String function = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore, import, signature
 
   public void initStage(Stage stage){
     this.stage = stage;
@@ -29,7 +30,7 @@ public class FESController{
 
   @FXML private SplitPane splitPane;
   @FXML private TextArea console;
-  @FXML private TextField keyNameField;
+
 
 
   @FXML
@@ -51,7 +52,7 @@ public class FESController{
   }
 
   @FXML
-  private void openStore(ActionEvent event) {
+  private void openStore() {
     console.appendText("Action: Open an existed key store\n");
     function = "openStore";
     FileChooser fileChooser = new FileChooser();
@@ -100,20 +101,6 @@ public class FESController{
     }else {
       console.appendText("ERROR: Please open a key store first\n");
     }
-
-  }
-
-  @FXML // select key dialog
-  private void keyChoosed(){
-    String keyName = keyNameField.getText();
-    // TODO: keyName compare
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Create New Key Store");
-    File file = fileChooser.showSaveDialog(stage);
-    if(file != null){
-      App.akms.exportPublicKey(keyName,file);
-    }
-
 
   }
 
@@ -203,8 +190,36 @@ public class FESController{
     dialog.show();
   }
 
+  @FXML
+  private void generateSignature() {
+    console.appendText("Action: generate signature\n");
+    function = "signature";
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Select a Key Store");
+    File file = fileChooser.showOpenDialog(stage);
+    if (file != null) {
+      try {
+        fileName = file.getAbsolutePath();
+        console.appendText("Key store file: " + fileName + "\n");
+        promptDecryptPassphrase();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private void openSaveSignature() throws IOException {
+    Stage dialog = new Stage();
+    Parent root = FXMLLoader.load(getClass().getResource("../../view/GenerateSignatureDialog.fxml"));
+    Scene scene = new Scene(root);
+    dialog.setTitle("Generate Signature");
+    dialog.setScene(scene);
+    dialog.show();
+  }
+
+
   // different action after get passphrase
-  public void confirm(String passphrase,String methodEn){
+  public void confirm(String passphrase,String methodEn) throws IOException {
     switch (function){
       case "createStore":
         App.akms.createNewKeyStore(new File(fileName), passphrase);
@@ -224,6 +239,10 @@ public class FESController{
         App.fes.decryptFile(fileName,passphrase,methodEn);
         console.appendText("Result: file decrypted\n");
         break;
+      case "signature":
+        //TODO: open key store get all pairs
+        openSaveSignature();
+        break;
     }
 
   }
@@ -238,6 +257,11 @@ public class FESController{
         console.appendText("Result: key imported\n");
         break;
     }
+  }
+
+  public void setSignatureInfo(String keyName, String algo){
+    //TODO: get private key
+    //App.fes.generateDigitalSignature(priv,fileName,algo);
   }
 
 }

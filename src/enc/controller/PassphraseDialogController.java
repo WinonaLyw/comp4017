@@ -2,6 +2,7 @@ package enc.controller;
 
 import enc.App;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -25,7 +26,7 @@ public class PassphraseDialogController {
 
   private String methodEn = "DES";
   @FXML
-  private void confirmInfo(ActionEvent event) {
+  private void confirmInfo(ActionEvent event) throws IOException {
     if(passphraseField.getText().length() != 8 || !passphraseField.getText().equals(confirmField.getText())){
       passphraseField.clear();
       confirmField.clear();

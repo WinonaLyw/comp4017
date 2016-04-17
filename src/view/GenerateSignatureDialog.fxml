@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="enc.controller.GenerateSignatureDialogController">
+   <children>
+      <Label layoutX="35.0" layoutY="27.0" text="Select the key name to get a private key:" />
+      <ComboBox fx:id="nameListBox" layoutX="54.0" layoutY="69.0" prefWidth="150.0" promptText="Key Name" />
+      <Label layoutX="35.0" layoutY="142.0" text="Signature generation algorithm:" />
+      <fx:define>
+         <ToggleGroup fx:id="algoGroup"/>
+      </fx:define>
+      <RadioButton onAction="#setAlgorithm" layoutX="60.0" selected="true" layoutY="174.0" mnemonicParsing="false" text="MD5" toggleGroup="$algoGroup"/>
+      <RadioButton layoutX="220.0" layoutY="174.0" mnemonicParsing="false" text="SHA1" toggleGroup="$algoGroup"/>
+      <Button onAction="#generateSignature" layoutX="429.0" layoutY="227.0" mnemonicParsing="false" text="OK" />
+   </children>
+</Pane>

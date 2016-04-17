@@ -24,15 +24,15 @@ public class KeyStore {
       this.file.createNewFile();
       this.writeLine(passphrase, true);
       this.save(true);
-      this.open(passphrase);
+      this.open(passphrase, true);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public byte[] open(String passphrase) {
+  public byte[] open(String passphrase, boolean isKeyStoreFile) {
     // 1. Decrypt keystore file
-    this.tempDecryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, false);
+    this.tempDecryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD);
 
     // 2. Read passphrase (first line)
     String correctPassphrase = this.readLine(tempDecryptedPath);
@@ -40,9 +40,28 @@ public class KeyStore {
       return null;
     }
 
+    if (!isKeyStoreFile) {
+      // 3. Read into KeyRing
+      this.readIntoKeyRing();
+    }
+
     // TODO: return to textfield
 //    this.writeLine("haha");
     return null;
+  }
+
+  private void readIntoKeyRing() {
+    try {
+      BufferedReader br = new BufferedReader(new FileReader(this.tempDecryptedPath));
+      br.readLine(); // skip passphrase
+      String currentLine = null;
+      while ((currentLine = br.readLine()) != null) {
+        System.out.println();
+      }
+      br.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void save(boolean isKeyStoreFile) {
@@ -80,11 +99,13 @@ public class KeyStore {
     try {
       BufferedReader br = new BufferedReader(new FileReader(filePath));
       line = br.readLine();
+      br.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
     return line;
   }
+
 
   public void generateKeyPairs(String name, String desc){
     try {
@@ -97,10 +118,11 @@ public class KeyStore {
       byte[] privateKey = pair.getPrivate().getEncoded();
       byte[] publicKey = pair.getPublic().getEncoded();
 
-      this.writeLine("name: " + name, false);
-      this.writeLine("desc: " + desc, false);
-      this.writeLine("publ: " + privateKey.toString(), false);
-      this.writeLine("priv: " + publicKey.toString(), false);
+      this.writeLine("Pair: " + true, false);
+      this.writeLine("Name: " + name, false);
+      this.writeLine("Desc: " + desc, false);
+      this.writeLine("Publ: " + privateKey.toString(), false);
+      this.writeLine("Priv: " + publicKey.toString(), false);
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }

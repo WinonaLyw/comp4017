@@ -236,7 +236,7 @@ public class FESController{
         break;
       case "decrypt":
         // TODO: method
-        App.fes.decryptFile(fileName,passphrase,methodEn,false);
+        App.fes.decryptFile(fileName,passphrase,methodEn);
         console.appendText("Result: file decrypted\n");
         break;
       case "signature":

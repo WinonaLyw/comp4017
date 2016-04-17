@@ -18,20 +18,29 @@ public class AsymmetricKeyManagementSubsystem {
   private KeyStore openedKeyStore;
 
   public void createNewKeyStore(File keyStoreFile, String passphrase) {
+    if (this.openedKeyStore != null) {
+      this.openedKeyStore.close();
+      this.openedKeyStore = null;
+    }
     this.openedKeyStore = new KeyStore(keyStoreFile);
     this.openedKeyStore.create(passphrase);
   }
 
   public byte[] openExistingKeyStore(File newKeyStoreFile, String passphrase) {
-    KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
-    byte[] content = newKeyStore.open(passphrase);
+
     //if (content != null) {
       if (this.openedKeyStore != null) {
         this.openedKeyStore.close();
+        this.openedKeyStore = null;
       }
-      this.openedKeyStore = newKeyStore;
+    KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
+    System.out.println(newKeyStoreFile.getAbsolutePath());
+//    byte[] content = newKeyStore.open(passphrase, false);
+    this.openedKeyStore = newKeyStore;
+    this.openedKeyStore.open(passphrase, false);
     //}
-    return content;
+//    return content;
+    return null;
   }
 
   public void closeKeyStore(){

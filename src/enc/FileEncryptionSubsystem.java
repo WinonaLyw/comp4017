@@ -33,11 +33,11 @@ public class FileEncryptionSubsystem {
     try {
       String ciphertextPath = null;
       // 1. Get output encrypted file path
-//      if (isKeyStoreFile) {
-//        ciphertextPath = plaintextPath.substring(0, plaintextPath.lastIndexOf("."));
-//      } else {
-        ciphertextPath = getOutputFilePath(plaintextPath, "enc");
-//      }
+      if (!isKeyStoreFile) {
+        ciphertextPath = plaintextPath.substring(0, plaintextPath.lastIndexOf("."));
+      } else {
+         ciphertextPath = getOutputFilePath(plaintextPath, "enc");
+      }
 
       FileOutputStream fos = new FileOutputStream(ciphertextPath);
 
@@ -69,6 +69,8 @@ public class FileEncryptionSubsystem {
         plainKeyStoreFile.delete();
         File cipherKeyStoreFile = new File(ciphertextPath);
         cipherKeyStoreFile.renameTo(plainKeyStoreFile);
+      } else {
+        System.out.println("ohohoh");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -78,7 +80,7 @@ public class FileEncryptionSubsystem {
   /*
     decrypt the encrypted file with password-base key and write into a "output.txt" file
    */
-  public String decryptFile(String ciphertextPath, String passphrase, String method, boolean isKeyStoreFile) {
+  public String decryptFile(String ciphertextPath, String passphrase, String method) {
     String decryptedFilePath = null;
     try {
       // 1. Get output ciphertext file path

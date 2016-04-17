@@ -25,8 +25,8 @@ public class App extends Application {
 //    fes.encryptFile("src/test.txt.tmp", "password", method, true);
 
     // akms test
-    //akms.createNewKeyStore(new File("a.txt"), "password");
-//    akms.openExistingKeyStore(new File("a.txt"), "passworr");
+    //akms.createNewKeyStore(new File("a"), "password");
+//    akms.openExistingKeyStore(new File("a"), "passworr");
 
 
     // signature test
@@ -43,7 +43,9 @@ public class App extends Application {
 //    kgs.generateNewAsymmetricKeyPair();
 ////    kgs.closeKeyStore();
 //
-
+    //akms.openExistingKeyStore(new File("a"), "aaaaaaaa");
+//    fes.encryptFile("a.dec", "aaaaaaaa", "DES", false);
+//
     Application.launch(App.class, args);
   }
 

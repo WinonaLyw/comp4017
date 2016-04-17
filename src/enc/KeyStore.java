@@ -6,7 +6,7 @@ import java.security.KeyPair;
 
 public class KeyStore {
   private File file;
-  private String decryptedPath;
+  private String tempDecryptedPath;
 
   private String passphrase;
   private KeyRing keyRing;
@@ -23,8 +23,8 @@ public class KeyStore {
 
     try {
       this.file.createNewFile();
-      this.writeLine(passphrase);
-      this.save();
+      this.writeLine(passphrase, this.file.getAbsolutePath());
+      this.save(true);
       this.open(passphrase);
     } catch (IOException e) {
       e.printStackTrace();
@@ -33,29 +33,32 @@ public class KeyStore {
 
   public byte[] open(String passphrase) {
     // 1. Decrypt keystore file
-    this.decryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+    this.tempDecryptedPath = App.fes.decryptFile(this.file.getAbsolutePath(), passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
 
     // 2. Read passphrase (first line)
-    String correctPassphrase = this.readLine(decryptedPath);
+    String correctPassphrase = this.readLine(tempDecryptedPath);
     if (!passphrase.equals(correctPassphrase)) {
       return null;
     }
 
-    this.writeLine("haha");
+    // TODO: return to textfield
+//    this.writeLine("haha");
     return null;
   }
 
-  private void save() {
-    App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+  private void save(boolean isKeyStoreFile) {
+    if (isKeyStoreFile) {
+      App.fes.encryptFile(this.file.getAbsolutePath(), this.passphrase, KEYSTORE_ENCRYPTION_METHOD, true);
+    }
   }
 
   public void close() {
-    this.save();
+    this.save(false);
   }
 
-  private void writeLine(String line) {
+  private void writeLine(String line, String filePath) {
     try {
-      BufferedWriter bw = new BufferedWriter(new FileWriter(this.decryptedPath, true));
+      BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
       bw.write(line);
       bw.newLine();
       bw.flush();

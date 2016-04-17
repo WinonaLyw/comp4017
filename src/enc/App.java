@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class App extends Application {
   public static final FileEncryptionSubsystem fes = FileEncryptionSubsystem.getInstance();
   public static final AsymmetricKeyManagementSubsystem akms = AsymmetricKeyManagementSubsystem.getInstance();
@@ -19,8 +21,12 @@ public class App extends Application {
     // Test
     // encrypt/ decrypt test
 //    String method = "DESede";
-//    fes.encryptFile("src/test.txt", "password", method, false);
-//    fes.decryptFile("src/test.txt.enc","password", method, false);
+//    fes.decryptFile("src/test.txt","password", method, true);
+//    fes.encryptFile("src/test.txt.tmp", "password", method, true);
+
+    // akms test
+    //akms.createNewKeyStore(new File("a.txt"), "password");
+
 
     // signature test
 //    String algorithm = "MD5withRSA";

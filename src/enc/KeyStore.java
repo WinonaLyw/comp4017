@@ -40,18 +40,18 @@ public class KeyStore {
   //
   // Store decryptedContent to keystore file
   private void store() {
-  //  // 1. Encrypt decryptedContent
-  //  byte[] encryptedContent = App.fes.encryptBytes(this.decryptedContent, this.passphrase,
-  //          KEYSTORE_ENCRYPTION_METHOD);
-  //
-  //  // 2. Write encrypted content
-  //  try {
-  //    FileOutputStream fos = new FileOutputStream(this.file);
-  //    fos.write(encryptedContent);
-  //    fos.close();
-  //  } catch (IOException e) {
-  //    e.printStackTrace();
-  //  }
+    //// 1. Encrypt decryptedContent
+    //byte[] encryptedContent = App.fes.encryptBytes(this.decryptedContent, this.passphrase,
+    //        KEYSTORE_ENCRYPTION_METHOD);
+    //
+    //// 2. Write encrypted content
+    //try {
+    //  FileOutputStream fos = new FileOutputStream(this.file);
+    //  fos.write(encryptedContent);
+    //  fos.close();
+    //} catch (IOException e) {
+    //  e.printStackTrace();
+    //}
   }
 
   public byte[] open(String passphrase) {

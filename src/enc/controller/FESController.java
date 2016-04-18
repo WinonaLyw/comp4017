@@ -91,7 +91,7 @@ public class FESController{
     // check if a key store opened
     if (App.akms.openedKeyStore()){
       console.appendText("Action: export public key\n");
-      function ="export";
+      function = "export";
       Stage dialog = new Stage();
       dialog.setTitle("Set Key Pair Information");
       Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
@@ -204,6 +204,21 @@ public class FESController{
       console.appendText("ERROR: you should open a key store first\n");
     }
   }
+  @FXML
+  private void verifySignature() throws IOException {
+    if(App.akms.openedKeyStore()) {
+      function = "verify";
+      console.appendText("Action: verify signature\n");
+      Stage dialog = new Stage();
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setTitle("Select Public Key");
+      dialog.setScene(scene);
+      dialog.show();
+    } else {
+      console.appendText("ERROR: you should open a key store first\n");
+    }
+  }
 
 
   // different action after get passphrase
@@ -239,6 +254,33 @@ public class FESController{
       case "import":
         App.akms.importPublicKey(fileName,name,desc);
         console.appendText("Result: key imported\n");
+        break;
+    }
+  }
+
+
+  public void setPublicKeyName(String keyName){
+    FileChooser fileChooser = new FileChooser();
+    switch (function){
+      case "export":
+        fileChooser.setTitle("Save public key");
+        File file = fileChooser.showSaveDialog(App.controller.stage);
+        if(file != null){
+          App.akms.exportPublicKey(keyName,file.getAbsolutePath());
+        }
+        break;
+      case  "verify":
+        fileChooser.setTitle("Open Signature File");
+        file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+          try {
+            fileName = file.getAbsolutePath();
+            console.appendText("Signature key file: " + fileName + "\n");
+            App.fes.verifyDigitalSignature(keyName, fileName);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
         break;
     }
   }

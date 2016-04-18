@@ -3,6 +3,7 @@ package enc;
 import java.io.*;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Random;
 import javax.crypto.Cipher;
@@ -149,21 +150,54 @@ public class FileEncryptionSubsystem {
   }
 
   public void generateDigitalSignature(Key priv, String filePath, String algorithm) {
-    if (algorithm.equals("SHA1")) {
+    //if (algorithm.equals("SHA1")) {
       algorithm = "SHA1withDSA";
-    }
+    //}
     try {
       Signature signature = Signature.getInstance(algorithm, "SUN");
       signature.initSign((PrivateKey) priv);
       byte[] realSig = signature.sign();
-      System.out.println("signature: " + realSig + "file: " + filePath);
       FileOutputStream sigfos = new FileOutputStream(filePath);
       sigfos.write(realSig);
       sigfos.close();
-
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public boolean verifyDigitalSignature(String keyName, String fileName){
+    PublicKey pub= App.akms.getPublicKey(keyName);
+    Signature sig = null;
+    try {
+      sig = Signature.getInstance("SHA1withDSA", "SUN");
+      sig.initVerify(pub);
+      FileInputStream datafis = new FileInputStream(fileName);
+      BufferedInputStream bufin = new BufferedInputStream(datafis);
+
+      byte[] buffer = new byte[1024];
+      int len;
+      while (bufin.available() != 0) {
+        len = bufin.read(buffer);
+        sig.update(buffer, 0, len);
+      };
+      bufin.close();
+      return sig.verify(sigToVerify);
+
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (NoSuchProviderException e) {
+      e.printStackTrace();
+    } catch (InvalidKeyException e) {
+      e.printStackTrace();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (SignatureException e) {
+      e.printStackTrace();
+    }
+
+
   }
 
   private String getOutputFilePath(String inputFilePath, String concatedStr) {

@@ -35,6 +35,14 @@ public class KeyRing{
     this.publicKeys.add(pk);
   }
 
+  public Key getPublicKey(String name){
+    for(KeyPair kp: this.keyPairs) {
+      if(name.equals(kp.getName())){
+        return kp.getPublicKey();
+      }
+    }
+    return null;
+  }
 
 
   // when import public key

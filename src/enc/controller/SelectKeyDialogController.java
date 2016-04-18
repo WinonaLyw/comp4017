@@ -22,19 +22,14 @@ public class SelectKeyDialogController {
 
   @FXML
   public void initialize(){
-    //setNameList(App.akms);
+    setNameListBox(App.akms.getKeyPairList());
   }
 
   @FXML
   private void keyChoosed(ActionEvent event){
     String keyName = nameListBox.getSelectionModel().getSelectedItem();
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save public key");
-    File file = fileChooser.showSaveDialog(App.controller.stage);
-    if(file != null){
-      App.akms.exportPublicKey(keyName,file);
-      ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
-    }
+    App.controller.setPublicKeyName(keyName);
+    ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
   }
 
   private void setNameListBox(ArrayList<KeyPair> keyList){

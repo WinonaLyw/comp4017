@@ -191,19 +191,11 @@ public class KeyStore {
 //      this.writeLine("Publ: " + privateKey.toString(), false);
 //      this.writeLine("Priv: " + publicKey.toString(), false);
 
-<<<<<<< Updated upstream
-//      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-//      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-//              pubKeyBytes);
-//      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
-//      System.out.println(pubKey.getEncoded());
-=======
-      KeyFactory keyFactory = KeyFactory.getInstance("DSA");
-      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-              pubKeyBytes);
-      PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
-      System.out.println(pubKey.getEncoded());
->>>>>>> Stashed changes
+      //KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+      //X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+      //        pubKeyBytes);
+      //PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
+      //System.out.println(pubKey.getEncoded());
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -259,6 +251,12 @@ public class KeyStore {
     if (keyRing != null){
       return keyRing.getPrivateKey(name);
     }
+    return null;
+  }
+
+  public Key getPublicKey(String name){
+    if (keyRing != null)
+      return keyRing.getPublicKey(name);
     return null;
   }
 }

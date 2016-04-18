@@ -196,4 +196,20 @@ public class KeyStore {
       return keyRing.getPublicKey(name);
     return null;
   }
+
+  public void importPublicKey(String fileName, String name, String description) {
+    try {
+      FileInputStream fis = new FileInputStream(fileName);
+      byte[] encKey = new byte[fis.available()];
+      fis.read(encKey);
+      fis.close();
+
+      X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
+      KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
+      PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+      this.keyRing.addPublicKey(pubKey, name, description);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

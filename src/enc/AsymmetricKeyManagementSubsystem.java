@@ -32,21 +32,15 @@ public class AsymmetricKeyManagementSubsystem {
     this.openedKeyStore.create(passphrase);
   }
 
-  public byte[] openExistingKeyStore(File newKeyStoreFile, String passphrase) {
+  public void openExistingKeyStore(File newKeyStoreFile, String passphrase) {
+    if (this.openedKeyStore != null) {
+      System.out.println("has opened");
+      this.openedKeyStore.close();
+      this.openedKeyStore = null;
+    }
 
-    //if (content != null) {
-      if (this.openedKeyStore != null) {
-        System.out.println("has opened");
-        this.openedKeyStore.close();
-        this.openedKeyStore = null;
-      }
-    //KeyStore newKeyStore = new KeyStore(newKeyStoreFile);
-//    byte[] content = newKeyStore.open(passphrase, false);
     this.openedKeyStore = new KeyStore(newKeyStoreFile);
     this.openedKeyStore.open(passphrase, false);
-    //}
-//    return content;
-    return null;
   }
 
   public void closeKeyStore(){
@@ -66,8 +60,7 @@ public class AsymmetricKeyManagementSubsystem {
   }
 
   public void importPublicKey(String filename, String name, String desc){
-    // TODO: read file get key ring
-//    openedKeyStore.importPublicKey(new KeyRing());
+    openedKeyStore.importPublicKey(filename, name, desc);
   }
 
   public PublicKey getPublicKey(String keyName){
@@ -90,7 +83,6 @@ public class AsymmetricKeyManagementSubsystem {
   }
 
   public Key getPrivateKey(String name){
-    // TODO: read file get key ring
     return openedKeyStore.getPrivateKey(name);
   }
 

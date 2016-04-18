@@ -4,10 +4,12 @@ package enc;
 
 import enc.controller.FESController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class App extends Application {
   public static final FileEncryptionSubsystem fes = FileEncryptionSubsystem.getInstance();
@@ -29,5 +31,11 @@ public class App extends Application {
 
     primaryStage.setScene(new Scene(root, 600, 500));
     primaryStage.show();
+    primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+      @Override
+      public void handle(WindowEvent event) {
+        akms.closeKeyStore();
+      }
+    });
   }
 }

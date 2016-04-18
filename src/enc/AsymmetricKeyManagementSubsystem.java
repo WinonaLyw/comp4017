@@ -44,7 +44,9 @@ public class AsymmetricKeyManagementSubsystem {
   }
 
   public void closeKeyStore(){
-    this.openedKeyStore.close();
+    if (this.openedKeyStore != null) {
+      this.openedKeyStore.close();
+    }
   }
 
   public boolean openedKeyStore(){

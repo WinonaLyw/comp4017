@@ -10,6 +10,7 @@ public class KeyRing{
 
   public KeyRing() {
     keyPairs = new ArrayList<>();
+    publicKeys = new ArrayList<>();
   }
 
   public void addKeyPair(java.security.KeyPair keyPair, String name, String description) {

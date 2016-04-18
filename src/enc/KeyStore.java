@@ -77,7 +77,7 @@ public class KeyStore {
           String publKey = currentLine.substring(6, currentLine.length());
           byte[] publKeyBytes = Base64.getDecoder().decode(publKey);
           X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publKeyBytes);
-          KeyFactory publKeyFactory = KeyFactory.getInstance("RSA");
+          KeyFactory publKeyFactory = KeyFactory.getInstance("DSA");
           PublicKey publicKey = publKeyFactory.generatePublic(x509EncodedKeySpec);
 
           if (isPair) {
@@ -85,7 +85,7 @@ public class KeyStore {
             String privKey = currentLine.substring(6, currentLine.length());
             byte[] privKeyBytes = Base64.getDecoder().decode(privKey);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privKeyBytes);
-            KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory privKeyFactory = KeyFactory.getInstance("DSA");
             PrivateKey privateKey = privKeyFactory.generatePrivate(keySpec);
 
             KeyPair pair = new KeyPair(publicKey, privateKey);
@@ -206,9 +206,15 @@ public class KeyStore {
       fis.close();
 
       X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-      KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
+      KeyFactory keyFactory = KeyFactory.getInstance("DSA");
       PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
       this.keyRing.addPublicKey(pubKey, name, description);
+      pubKeySpec  = keyFactory.getKeySpec(pubKey, X509EncodedKeySpec.class);
+
+      this.writeLine("Pair: " + false, false);
+      this.writeLine("Name: " + name, false);
+      this.writeLine("Desc: " + description, false);
+      this.writeLine(("Publ: " + Base64.getEncoder().encodeToString(pubKeySpec.getEncoded())), false);
     } catch (Exception e) {
       e.printStackTrace();
     }

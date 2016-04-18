@@ -23,7 +23,7 @@ public class App extends Application {
     String method = "DES";
 
     fes.encryptFile("a", "password", method, true);
-    fes.decryptFile("a","password", method);
+    fes.decryptFile("a","password");
 
     // akms test
     //akms.createNewKeyStore(new File("a"), "password");

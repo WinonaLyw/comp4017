@@ -46,8 +46,7 @@ public class AsymmetricKeyManagementSubsystem {
   }
 
   public void closeKeyStore(){
-//    curKeyStore.writeIntoFile(curFile);
-//    FileEncryptionSubsystem.encryptFile(curFile, curPass, fileMap.get(curFile));
+    this.openedKeyStore.close();
   }
 
   public boolean openedKeyStore(){

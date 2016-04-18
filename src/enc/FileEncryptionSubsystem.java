@@ -38,6 +38,11 @@ public class FileEncryptionSubsystem {
       } else {
          ciphertextPath = getOutputFilePath(plaintextPath, "enc");
       }
+      File cipherKeyStoreFile = new File(ciphertextPath);
+      if (cipherKeyStoreFile.exists()) {
+        cipherKeyStoreFile.delete();
+        cipherKeyStoreFile.createNewFile();
+      }
 
       FileOutputStream fos = new FileOutputStream(ciphertextPath);
 
@@ -75,7 +80,6 @@ public class FileEncryptionSubsystem {
       if (isKeyStoreFile) {
         File plainKeyStoreFile = new File(plaintextPath);
         plainKeyStoreFile.delete();
-        File cipherKeyStoreFile = new File(ciphertextPath);
         cipherKeyStoreFile.renameTo(plainKeyStoreFile);
       } else {
       }
@@ -87,7 +91,7 @@ public class FileEncryptionSubsystem {
   /*
     decrypt the encrypted file with password-base key and write into a "output.txt" file
    */
-  public String decryptFile(String ciphertextPath, String passphrase, String haha) {
+  public String decryptFile(String ciphertextPath, String passphrase) {
     String decryptedFilePath = null;
     try {
       decryptedFilePath = getOutputFilePath(ciphertextPath, "dec");

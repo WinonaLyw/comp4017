@@ -219,12 +219,12 @@ public class FESController{
         break;
       case "closeStore": break;
       case "encrypt":
-        App.fes.encryptFile(fileName,passphrase,methodEn,false);
+        App.fes.encryptFile(fileName, passphrase, methodEn, false);
         console.appendText("Result: file encrypted\n");
         break;
       case "decrypt":
         // TODO: method
-        App.fes.decryptFile(fileName,passphrase,methodEn);
+        App.fes.decryptFile(fileName, passphrase);
         console.appendText("Result: file decrypted\n");
         break;
     }

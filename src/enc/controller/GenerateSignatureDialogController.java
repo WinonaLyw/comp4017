@@ -38,7 +38,7 @@ public class GenerateSignatureDialogController {
       fileChooser.setTitle("Save Signature File");
       file = fileChooser.showSaveDialog(App.controller.stage);
       if(file != null){
-        App.controller.setSignature(dataPath, keyName,file.getAbsolutePath(),algorithm);
+        App.controller.setSignature(dataPath, keyName, file.getAbsolutePath(), algorithm);
         ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
       }
     }

@@ -150,7 +150,7 @@ public class KeyStore {
 
   public void generateKeyPairs(String name, String desc){
     try {
-      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+      KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA");
       keyGen.initialize(1024);
       KeyPair pair = keyGen.generateKeyPair();
 
@@ -159,7 +159,7 @@ public class KeyStore {
       PrivateKey privateKey = pair.getPrivate();
       PublicKey publicKey = pair.getPublic();
 
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      KeyFactory keyFactory = KeyFactory.getInstance("DSA");
       X509EncodedKeySpec x509EncodedKeySpec = keyFactory.getKeySpec(publicKey, X509EncodedKeySpec.class);
       PKCS8EncodedKeySpec pkcs8EncodedKeySpec = keyFactory.getKeySpec(privateKey, PKCS8EncodedKeySpec.class);
       byte[] privKeyBytes = pkcs8EncodedKeySpec.getEncoded();
@@ -170,6 +170,7 @@ public class KeyStore {
 
       this.writeLine(("Publ: " + Base64.getEncoder().encodeToString(x509EncodedKeySpec.getEncoded())), false);
       this.writeLine("Priv: " + Base64.getEncoder().encodeToString(privKeyBytes), false);
+
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     } catch (InvalidKeySpecException e) {

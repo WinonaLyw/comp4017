@@ -3,6 +3,7 @@ package enc.controller;
 import enc.App;
 import enc.KeyPair;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventObject;
 import javafx.collections.FXCollections;
@@ -28,7 +29,11 @@ public class SelectKeyDialogController {
   @FXML
   private void keyChoosed(ActionEvent event){
     String keyName = nameListBox.getSelectionModel().getSelectedItem();
-    App.controller.setPublicKeyName(keyName);
+    try {
+      App.controller.setPublicKeyName(keyName);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
   }
 

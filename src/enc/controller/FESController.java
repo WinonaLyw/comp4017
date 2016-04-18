@@ -240,7 +240,7 @@ public class FESController{
   }
 
   @FXML
-  private void decryptAndVerif() throws IOException {
+  private void decryptAndVerify() throws IOException {
     if(App.akms.openedKeyStore()) {
       functionUsing = "decAndVerify";
       console.appendText("Action: file decryption and digital signature verification\n");

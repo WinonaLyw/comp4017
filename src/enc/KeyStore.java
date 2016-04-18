@@ -241,8 +241,8 @@ public class KeyStore {
   }
 
   public Key getPublicKey(String name){
-//    if (keyRing != null)
-//      return keyRing.getPublicKey(name);
+    if (keyRing != null)
+      return keyRing.getPublicKey(name);
     return null;
   }
 }

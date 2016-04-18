@@ -3,6 +3,7 @@ package enc;
 import java.io.*;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Random;
 import javax.crypto.Cipher;
@@ -152,21 +153,71 @@ public class FileEncryptionSubsystem {
     }
   }
 
-  public void generateDigitalSignature(Key priv, String filePath, String algorithm) {
-    if (algorithm.equals("SHA1")) {
+  public void generateDigitalSignature(String dataPath, Key priv, String filePath, String algorithm) {
+    //if (algorithm.equals("SHA1")) {
       algorithm = "SHA1withDSA";
-    }
+    //}
     try {
       Signature signature = Signature.getInstance(algorithm, "SUN");
       signature.initSign((PrivateKey) priv);
+      // sign data file
+      FileInputStream fis = new FileInputStream(dataPath);
+      BufferedInputStream bufin = new BufferedInputStream(fis);
+      byte[] buffer = new byte[1024];
+      int len;
+      while ((len = bufin.read(buffer)) >= 0) {
+        signature.update(buffer, 0, len);
+      };
+      bufin.close();
+
       byte[] realSig = signature.sign();
       FileOutputStream sigfos = new FileOutputStream(filePath);
+      System.out.println(filePath);
       sigfos.write(realSig);
       sigfos.close();
-
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public boolean verifyDigitalSignature(String keyName, String fileName, String dataPath){
+    try {
+      PublicKey pub= App.akms.getPublicKey(keyName);
+      Signature sig = Signature.getInstance("SHA1withDSA", "SUN");
+      sig.initVerify(pub);
+      FileInputStream datafis = new FileInputStream(dataPath);
+      BufferedInputStream bufin = new BufferedInputStream(datafis);
+
+      byte[] buffer = new byte[1024];
+      int len;
+      while (bufin.available() != 0) {
+        len = bufin.read(buffer);
+        sig.update(buffer, 0, len);
+      };
+      bufin.close();
+
+      // read signature file
+      FileInputStream sigfis = new FileInputStream(fileName);
+      byte[] sigToVerify = new byte[sigfis.available()];
+      sigfis.read(sigToVerify);
+      sigfis.close();
+
+      return sig.verify(sigToVerify);
+
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (NoSuchProviderException e) {
+      e.printStackTrace();
+    } catch (InvalidKeyException e) {
+      e.printStackTrace();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (SignatureException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   private String getOutputFilePath(String inputFilePath, String concatedStr) {

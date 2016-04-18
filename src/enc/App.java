@@ -20,10 +20,10 @@ public class App extends Application {
   public static void main(String[] args) {
     // Test
     // encrypt/ decrypt test
-    String method = "DES";
-
-    fes.encryptFile("a", "password", method, true);
-    fes.decryptFile("a","password");
+    //String method = "DES";
+    //
+    //fes.encryptFile("a", "password", method, true);
+    //fes.decryptFile("a","password", method);
 
     // akms test
     //akms.createNewKeyStore(new File("a"), "password");

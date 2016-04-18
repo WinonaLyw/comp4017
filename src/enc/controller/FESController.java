@@ -22,7 +22,9 @@ import java.io.IOException;
 public class FESController{
   Stage stage;
   String fileName;
-  String function = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore, import, signature
+  String sigFile; // for encAndSign and decAndVerify
+  String pubName; // for decAndVerify
+  String functionUsing = "encrypt"; // encrpyt, decrypt, createStore, openStore, closeStore, import, signature
 
   public void initStage(Stage stage){
     this.stage = stage;
@@ -36,7 +38,7 @@ public class FESController{
   @FXML
   private void createStore() {
     console.appendText("Action: Create a new key store\n");
-    function = "createStore";
+    functionUsing = "createStore";
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Create New Key Store");
     File file = fileChooser.showSaveDialog(stage);
@@ -54,7 +56,7 @@ public class FESController{
   @FXML
   private void openStore() {
     console.appendText("Action: Open an existed key store\n");
-    function = "openStore";
+    functionUsing = "openStore";
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Key Store");
     File file = fileChooser.showOpenDialog(stage);
@@ -71,7 +73,7 @@ public class FESController{
 
   @FXML
   private void generateKeyPairs() throws IOException {
-    function = "generate";
+    functionUsing = "generate";
     if (App.akms.openedKeyStore()){
       console.appendText("Action: Generate a key pair\n");
       Stage dialog = new Stage();
@@ -91,7 +93,7 @@ public class FESController{
     // check if a key store opened
     if (App.akms.openedKeyStore()){
       console.appendText("Action: export public key\n");
-      function ="export";
+      functionUsing = "export";
       Stage dialog = new Stage();
       dialog.setTitle("Set Key Pair Information");
       Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
@@ -109,7 +111,7 @@ public class FESController{
     // check if a key store opened
     if (App.akms.openedKeyStore()){
       console.appendText("Action: export public key\n");
-      function = "import";
+      functionUsing = "import";
       FileChooser fileChooser = new FileChooser();
       fileChooser.setTitle("Open Public Key File");
       File file = fileChooser.showOpenDialog(stage);
@@ -138,7 +140,7 @@ public class FESController{
     // check if a key store opened
     if (App.akms.openedKeyStore()){
       console.appendText("Action: close the key store\n");
-      function = "closeStore";
+      functionUsing = "closeStore";
       App.akms.closeKeyStore();
     }else {
       console.appendText("ERROR: Please open a key store first\n");
@@ -149,7 +151,7 @@ public class FESController{
   @FXML
   private void encryptFile(ActionEvent event) throws IOException {
     console.appendText("Action: Open an file to encrypt\n");
-    function = "encrypt";
+    functionUsing = "encrypt";
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
       fileName = file.getAbsolutePath();
@@ -161,7 +163,7 @@ public class FESController{
   @FXML
   private void decryptFile(ActionEvent event) throws IOException {
     console.appendText("Action: Open an file to decrypt\n");
-    function = "decrypt";
+    functionUsing = "decrypt";
     File file = (new FileChooser()).showOpenDialog(new Stage());
     if (file != null) {
       fileName = file.getAbsolutePath();
@@ -205,10 +207,57 @@ public class FESController{
     }
   }
 
+  @FXML
+  private void encryptAndSign() throws IOException{
+    if(App.akms.openedKeyStore()){
+      functionUsing = "encAndSign";
+      console.appendText("Action: File Encryption and Digital Signature\n");
+      Stage dialog = new Stage();
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/GenerateSignatureDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setTitle("Generate Signature");
+      dialog.setScene(scene);
+      dialog.show();
+    } else {
+      console.appendText("ERROR: you should open a key store first\n");
+    }
+  }
+
+  @FXML
+  private void verifySignature() throws IOException {
+    if(App.akms.openedKeyStore()) {
+      functionUsing = "verify";
+      console.appendText("Action: verify signature\n");
+      Stage dialog = new Stage();
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setTitle("Select Public Key");
+      dialog.setScene(scene);
+      dialog.show();
+    } else {
+      console.appendText("ERROR: you should open a key store first\n");
+    }
+  }
+
+  @FXML
+  private void decryptAndVerif() throws IOException {
+    if(App.akms.openedKeyStore()) {
+      functionUsing = "decAndVerify";
+      console.appendText("Action: file decryption and digital signature verification\n");
+      Stage dialog = new Stage();
+      Parent root = FXMLLoader.load(getClass().getResource("../../view/SelectKeyDialog.fxml"));
+      Scene scene = new Scene(root);
+      dialog.setTitle("Select Public Key");
+      dialog.setScene(scene);
+      dialog.show();
+    } else {
+      console.appendText("ERROR: you should open a key store first\n");
+    }
+  }
 
   // different action after get passphrase
   public void confirm(String passphrase,String methodEn) throws IOException {
-    switch (function){
+    switch (functionUsing){
       case "createStore":
         App.akms.createNewKeyStore(new File(fileName), passphrase);
         console.appendText("Result: new key store opened\n");
@@ -217,21 +266,36 @@ public class FESController{
         App.akms.openExistingKeyStore(new File(fileName), passphrase);
         console.appendText("Result: selected key store opened\n");
         break;
-      case "closeStore": break;
+      case "closeStore":
+        App.akms.closeKeyStore();
+        break;
       case "encrypt":
-        App.fes.encryptFile(fileName, passphrase, methodEn, false);
+        App.fes.encryptFile(fileName,passphrase,methodEn,false);
         console.appendText("Result: file encrypted\n");
         break;
       case "decrypt":
-        // TODO: method
-        App.fes.decryptFile(fileName, passphrase);
+        App.fes.decryptFile(fileName,passphrase);
         console.appendText("Result: file decrypted\n");
         break;
+      case "encAndSign":
+        App.fes.encryptFile(fileName,passphrase,methodEn,false);
+        App.fes.encryptFile(sigFile,passphrase,methodEn,false);
+        break;
+      case "decAndVerify":
+        // decypt
+        String resFile = App.fes.decryptFile(fileName,passphrase);
+        String resSign =  App.fes.decryptFile(sigFile,passphrase);
+        // verify
+        if(App.fes.verifyDigitalSignature(pubName, resSign, resFile)){
+          console.appendText("Result: selected signature is verified ^ ___ ^\n");
+        }else {
+          console.appendText("Result: selected signature is not verified T .... T\n");
+        }
+        break;
     }
-
   }
   public void saveKey(String name, String desc){
-    switch(function){
+    switch(functionUsing){
       case "generate":
         App.akms.generateNewAsymmetricKeyPair(name,desc);
         console.appendText("Result: key pair generated\n");
@@ -243,8 +307,70 @@ public class FESController{
     }
   }
 
-  public void setSignatureInfo(String keyName, String algo){
-    App.fes.generateDigitalSignature(App.akms.getPrivateKey(keyName),fileName,algo);
+
+  public void setPublicKeyName(String keyName) throws IOException {
+    FileChooser fileChooser = new FileChooser();
+    switch (functionUsing){
+      case "export":
+        console.appendText("Action: choose a file to save exported public key\n");
+        File file = fileChooser.showSaveDialog(App.controller.stage);
+        if(file != null){
+          App.akms.exportPublicKey(keyName,file.getAbsolutePath());
+        }
+        break;
+      case "verify":
+        console.appendText("Action: open a data file\n");
+        file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+          fileName = file.getPath();
+          console.appendText("Action: open the to verify signature file\n");
+          file = fileChooser.showOpenDialog(stage);
+          if (file != null) {
+            try {
+              sigFile = file.getAbsolutePath();
+              console.appendText("Signature key file: " + sigFile + "\n");
+              if(App.fes.verifyDigitalSignature(keyName, sigFile, fileName)){
+                console.appendText("Result: selected signature is verified ^ ___ ^\n");
+              }else {
+                console.appendText("Result: selected signature is not verified T .... T\n");
+              }
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        }
+        break;
+      case "decAndVerify":
+        console.appendText("Action: open an encrypted data file\n");
+        file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+          fileName = file.getPath();
+          console.appendText("Action: open an encrypted signature file\n");
+          file = fileChooser.showOpenDialog(stage);
+          if (file != null) {
+            try {
+              sigFile = file.getAbsolutePath();
+              pubName = keyName;
+              // get passphrase
+              console.appendText("Action: get a passphrase for decryption\n");
+              promptDecryptPassphrase();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        }
+        break;
+    }
+  }
+
+  public void setSignature(String dataPath, String keyName, String sigName, String algorithm)
+    throws IOException {
+    App.fes.generateDigitalSignature(dataPath, App.akms.getPrivateKey(keyName),sigName,algorithm);
+    if(functionUsing.equals("encAndSign")){
+      this.fileName = dataPath;
+      sigFile = sigName;
+      promptEncryptPassphrase();
+    }
   }
 
 }

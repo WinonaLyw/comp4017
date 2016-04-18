@@ -1,7 +1,11 @@
 package enc;
 
 import java.io.File;
-import java.security.Key;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.*;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 /**
@@ -65,8 +69,24 @@ public class AsymmetricKeyManagementSubsystem {
     openedKeyStore.importPublicKey(new KeyRing());
   }
 
-  public void exportPublicKey(String keyName, File file){
-    //TODO: get public key and export
+  public PublicKey getPublicKey(String keyName){
+    return (PublicKey) openedKeyStore.getPublicKey(keyName);
+  }
+
+  public void exportPublicKey(String keyName, String fileName){
+    java.security.PublicKey publicKey = (PublicKey) openedKeyStore.getPublicKey(keyName);
+    byte[] key = publicKey.getEncoded();
+    FileOutputStream keyfos = null;
+    try {
+      keyfos = new FileOutputStream(fileName);
+      keyfos.write(key);
+      keyfos.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
 
   }
 

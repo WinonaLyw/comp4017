@@ -3,6 +3,7 @@ package enc.controller;
 import enc.App;
 import enc.KeyPair;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -26,15 +27,22 @@ public class GenerateSignatureDialogController {
   }
 
   @FXML
-  private void generateSignature(ActionEvent event){
+  private void generateSignature(ActionEvent event) throws IOException {
     String keyName = nameListBox.getSelectionModel().getSelectedItem();
     FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Save Signature");
-    File file = fileChooser.showSaveDialog(App.controller.stage);
-    if(file != null){
-      App.controller.setSignatureInfo(keyName,algorithm);
-      ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
+    fileChooser.setTitle("Data File to Sign");
+    File file = fileChooser.showOpenDialog(App.controller.stage);
+    if (file != null) {
+      String dataPath = file.getPath();
+      fileChooser = new FileChooser();
+      fileChooser.setTitle("Save Signature File");
+      file = fileChooser.showSaveDialog(App.controller.stage);
+      if(file != null){
+        App.controller.setSignature(dataPath, keyName,file.getAbsolutePath(),algorithm);
+        ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
+      }
     }
+
   }
 
   @FXML

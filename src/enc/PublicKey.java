@@ -13,4 +13,12 @@ public class PublicKey {
     this.name = name;
     this.description = description;
   }
+
+  public String getName(){
+    return this.name;
+  }
+
+  public java.security.PublicKey getPublicKey() {
+    return publicKey;
+  }
 }

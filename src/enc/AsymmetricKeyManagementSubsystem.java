@@ -64,9 +64,10 @@ public class AsymmetricKeyManagementSubsystem {
   public ArrayList<KeyPair> getKeyPairList(){
     return openedKeyStore.getKeyPairs();
   }
+
   public void importPublicKey(String filename, String name, String desc){
     // TODO: read file get key ring
-    openedKeyStore.importPublicKey(new KeyRing());
+//    openedKeyStore.importPublicKey(new KeyRing());
   }
 
   public PublicKey getPublicKey(String keyName){
@@ -86,8 +87,6 @@ public class AsymmetricKeyManagementSubsystem {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-
   }
 
   public Key getPrivateKey(String name){

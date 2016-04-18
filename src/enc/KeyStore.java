@@ -90,19 +90,13 @@ public class KeyStore {
 
             KeyPair pair = new KeyPair(publicKey, privateKey);
             enc.KeyPair keyPair = new enc.KeyPair(pair, name, description);
+            this.keyRing.addKeyPair(keyPair);
+          } else {
+            enc.PublicKey pbKey = new enc.PublicKey(publicKey, name, description);
+            this.keyRing.addPublicKey(pbKey);
           }
-        } else {
-//          baos.write(currentLine.getBytes());
         }
-
       }
-//      byte[] bytes = baos.toByteArray();
-
-      //byte[] publicKeyBytes = (new BASE64Decoder()).decodeBuffer(baos.toByteArray());
-//      X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(bytes);
-//      KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
-//      java.security.PublicKey pubKey = pubKeyFactory.generatePublic(pubKeySpec);
-
       br.close();
     } catch (Exception e) {
       e.printStackTrace();
@@ -176,54 +170,11 @@ public class KeyStore {
 
       this.writeLine(("Publ: " + Base64.getEncoder().encodeToString(x509EncodedKeySpec.getEncoded())), false);
       this.writeLine("Priv: " + Base64.getEncoder().encodeToString(privKeyBytes), false);
-
-      //KeyFactory keyFactory = KeyFactory.getInstance("DSA");
-      //X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-      //        pubKeyBytes);
-      //PublicKey pubKey = keyFactory.generatePublic(publicKeySpec);
-      //System.out.println(pubKey.getEncoded());
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     } catch (InvalidKeySpecException e) {
       e.printStackTrace();
     }
-  }
-
-//  public void loadFromFile(String fileName) {
-//    try {
-//      BufferedReader br = new BufferedReader(new FileReader(fileName));
-//      String line = br.readLine();
-//      while (line != null) {
-//        String[] contents = line.split(" ");
-//        KeyRing keyRing = new KeyRing(contents[0],contents[1],contents[2]);
-//        keyRings.add(keyRing);
-//        line = br.readLine();
-//      }
-//      br.close();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-
-//  public void writeIntoFile(String fileName) {
-//    try {
-//      BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
-//      for(KeyRing keyRing : keyRings){
-//        bw.write(keyRing.getKey() + " " + keyRing.getName() + " " + keyRing.getDescription());
-//        bw.newLine();
-//      }
-//      bw.close();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//
-//  }
-
-  //public Key exportPublicKey(String name){
-  //}
-
-  public void importPublicKey(KeyRing piblicKeyRing){
-
   }
 
   public ArrayList<enc.KeyPair> getKeyPairs(){

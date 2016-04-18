@@ -17,6 +17,10 @@ public class KeyRing{
     this.keyPairs.add(kp);
   }
 
+  public void addKeyPair(KeyPair keyPair) {
+    this.keyPairs.add(keyPair);
+  }
+
   public ArrayList<KeyPair> getKeyPairs(){
     return this.keyPairs;
   }
@@ -33,6 +37,10 @@ public class KeyRing{
   public void addPublicKey(PublicKey publicKey, String name, String description) {
     enc.PublicKey pk = new enc.PublicKey(publicKey, name, description);
     this.publicKeys.add(pk);
+  }
+
+  public void addPublicKey(enc.PublicKey publicKey) {
+    this.publicKeys.add(publicKey);
   }
 
   public Key getPublicKey(String name){

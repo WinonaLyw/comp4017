@@ -27,8 +27,8 @@
                   <Button layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#encryptFile" text="FILE ENCRYPTION" />
                   <Button layoutX="14.0" layoutY="48.0" mnemonicParsing="false" onAction="#decryptFile" text="FILE DECRYPTION" />
                   <Button layoutX="14.0" layoutY="85.0" mnemonicParsing="false" onAction="#generateSignature" text="GENERATE SIGNATURE" />
-                  <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#decryptFile" text="ENCRYPTION + GENERATE SIGNATURE" />
-                  <Button layoutX="14.0" layoutY="201.0" mnemonicParsing="false" onAction="#decryptFile" text="DECRYPTION + VERIFY SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#encryptAndSign" text="ENCRYPTION + GENERATE SIGNATURE" />
+                  <Button layoutX="14.0" layoutY="201.0" mnemonicParsing="false" onAction="#decryptAndVerify" text="DECRYPTION + VERIFY SIGNATURE" />
                   <Button layoutX="14.0" layoutY="163.0" mnemonicParsing="false" onAction="#verifySignature" text="VERIFY SIGNATURE" />
                </children>
             </Pane>

@@ -149,15 +149,26 @@ public class FileEncryptionSubsystem {
     }
   }
 
-  public void generateDigitalSignature(Key priv, String filePath, String algorithm) {
+  public void generateDigitalSignature(String dataPath, Key priv, String filePath, String algorithm) {
     //if (algorithm.equals("SHA1")) {
       algorithm = "SHA1withDSA";
     //}
     try {
       Signature signature = Signature.getInstance(algorithm, "SUN");
       signature.initSign((PrivateKey) priv);
+      // sign data file
+      FileInputStream fis = new FileInputStream(dataPath);
+      BufferedInputStream bufin = new BufferedInputStream(fis);
+      byte[] buffer = new byte[1024];
+      int len;
+      while ((len = bufin.read(buffer)) >= 0) {
+        signature.update(buffer, 0, len);
+      };
+      bufin.close();
+
       byte[] realSig = signature.sign();
       FileOutputStream sigfos = new FileOutputStream(filePath);
+      System.out.println(filePath);
       sigfos.write(realSig);
       sigfos.close();
     } catch (Exception e) {
@@ -165,13 +176,12 @@ public class FileEncryptionSubsystem {
     }
   }
 
-  public boolean verifyDigitalSignature(String keyName, String fileName){
-    PublicKey pub= App.akms.getPublicKey(keyName);
-    Signature sig = null;
+  public boolean verifyDigitalSignature(String keyName, String fileName, String dataPath){
     try {
-      sig = Signature.getInstance("SHA1withDSA", "SUN");
+      PublicKey pub= App.akms.getPublicKey(keyName);
+      Signature sig = Signature.getInstance("SHA1withDSA", "SUN");
       sig.initVerify(pub);
-      FileInputStream datafis = new FileInputStream(fileName);
+      FileInputStream datafis = new FileInputStream(dataPath);
       BufferedInputStream bufin = new BufferedInputStream(datafis);
 
       byte[] buffer = new byte[1024];
@@ -181,6 +191,13 @@ public class FileEncryptionSubsystem {
         sig.update(buffer, 0, len);
       };
       bufin.close();
+
+      // read signature file
+      FileInputStream sigfis = new FileInputStream(fileName);
+      byte[] sigToVerify = new byte[sigfis.available()];
+      sigfis.read(sigToVerify);
+      sigfis.close();
+
       return sig.verify(sigToVerify);
 
     } catch (NoSuchAlgorithmException e) {
@@ -196,8 +213,7 @@ public class FileEncryptionSubsystem {
     } catch (SignatureException e) {
       e.printStackTrace();
     }
-
-
+    return false;
   }
 
   private String getOutputFilePath(String inputFilePath, String concatedStr) {
